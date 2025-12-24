@@ -1,0 +1,18 @@
+# --- Odoo / Postgres runtime data (NEVER commit) ---
+postgres_data/
+odoo_data/
+data/odoo-data/
+
+# Odoo / Python caches
+**/__pycache__/
+**/*.py[cod]
+**/*.pyo
+**/*.pyd
+
+# Local tooling
+.history/
+.vscode/
+
+# OS
+Thumbs.db
+.DS_Store

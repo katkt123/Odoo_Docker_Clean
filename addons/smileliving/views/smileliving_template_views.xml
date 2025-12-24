@@ -1,0 +1,1454 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- <template id="smileliving_homepage" name="SmileLiving Homepage">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure">
+                    <section class="py-5">
+                        <div class="container">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h1 class="mb-0">SmileLiving - Bất Động Sản</h1>
+                                <a href="/shop" class="btn btn-primary">Xem tất cả</a>
+                            </div>
+
+                            <div class="row">
+                                <t t-foreach="properties" t-as="property">
+                                    <div class="col-lg-3 col-md-6 mb-4">
+                                        <div class="card h-100">
+                                            <a t-att-href="property.website_url" class="text-decoration-none">
+                                                <img t-att-src="'/web/image/product.template/%s/image_512' % property.id" class="card-img-top" style="height: 200px; object-fit: cover;" t-att-alt="property.name"/>
+                                            </a>
+                                            <div class="card-body d-flex flex-column">
+                                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                                    <h6 class="card-title mb-0" t-esc="property.name"/>
+                                                    <t t-set="variant_id" t-value="property._get_first_possible_variant_id() or (property.product_variant_id.id if property.product_variant_id else False)"/>
+                                                    <button
+                                                        t-if="variant_id"
+                                                        type="button"
+                                                        class="o_add_wishlist btn p-0 border-0 bg-transparent text-warning"
+                                                        t-att-data-product-template-id="property.id"
+                                                        t-att-data-product-product-id="variant_id"
+                                                        data-action="o_wishlist"
+                                                        title="Thêm vào wishlist"
+                                                    >
+                                                        <i class="fa fa-heart-o" role="presentation"/>
+                                                    </button>
+                                                </div>
+                                                <p class="card-text text-muted small mb-2" t-esc="property.address"/>
+
+                                                <t t-set="smile_pricelist" t-value="website._get_and_cache_current_pricelist() if website else None"/>
+                                                <t t-set="smile_price" t-value="smile_pricelist._get_product_price(property.product_variant_id, 1.0) if (smile_pricelist and property.product_variant_id) else property.list_price"/>
+                                                <div class="mt-auto">
+                                                    <div class="fw-semibold">
+                                                        <span>Giá: </span>
+                                                        <span t-out="smile_price" t-options="{'widget': 'monetary', 'display_currency': (smile_pricelist.currency_id if smile_pricelist and smile_pricelist.currency_id else website.currency_id)}"/>
+                                                    </div>
+                                                    <div class="mt-2">
+                                                        <a t-att-href="property.website_url" class="btn btn-outline-primary btn-sm">Xem chi tiết</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </t>
+        </template> -->
+
+        <!-- Homepage - Property Listing -->
+        <!-- <template id="homepage" name="SmileLiving Homepage">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure">
+                    <section class="py-5">
+                        <div class="container">
+                            <h1 class="mb-4">SmileLiving - Bất Động Sản</h1>
+                            <div class="row">
+                                <t t-foreach="properties" t-as="property">
+                                    <div class="col-lg-4 col-md-6 mb-4">
+                                        <div class="card h-100 shadow-sm">
+                                            <t t-if="property.image_1920">
+                                                <img t-att-src="'/web/image/product.template/' + str(property.id) + '/image_1920'" class="card-img-top" style="height: 200px; object-fit: cover;"/>
+                                            </t>
+                                            <t t-else="">
+                                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                                    <span class="text-muted">Không có hình</span>
+                                                </div>
+                                            </t>
+                                            <div class="card-body d-flex flex-column">
+                                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                                    <h5 class="card-title" t-esc="property.name"/>
+                                                    <a href="#" class="text-warning favorite-btn" t-att-data-property-id="property.id" title="Quan tâm">
+                                                        <i class="fa fa-heart"></i>
+                                                    </a>
+                                                </div>
+                                                <p class="card-text text-muted small mb-2" t-esc="property.address"/>
+                                                <t t-set="smile_pricelist" t-value="website._get_and_cache_current_pricelist() if website else None"/>
+                                                <t t-set="smile_price" t-value="smile_pricelist._get_product_price(property.product_variant_id, 1.0) if (smile_pricelist and property.product_variant_id) else property.list_price"/>
+                                                <p class="card-text"><strong>Giá: </strong>
+                                                    <span t-out="smile_price" t-options="{'widget': 'monetary', 'display_currency': (smile_pricelist.currency_id if smile_pricelist and smile_pricelist.currency_id else website.currency_id)}"/>
+                                                </p>
+                                                <div class="mt-auto">
+                                                    <span class="badge bg-success" t-if="property.house_status == 'available'">Còn trống</span>
+                                                    <span class="badge bg-warning" t-elif="property.house_status == 'sold'">Đã bán</span>
+                                                    <span class="badge bg-secondary" t-else="">Khác</span>
+                                                    <div class="mt-2">
+                                                          <a t-att-href="property.website_url" class="btn btn-primary btn-sm">Xem chi tiết</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        var favoriteBtns = document.querySelectorAll('.favorite-btn');
+                        favoriteBtns.forEach(function(btn) {
+                            btn.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                var propertyId = this.getAttribute('data-property-id');
+                                window.location.href = '/smileliving/interest/' + propertyId;
+                            });
+                        });
+                    });
+                </script>
+                
+                <style>
+                    .favorite-btn {
+                        font-size: 1.5rem;
+                        text-decoration: none;
+                        transition: all 0.3s ease;
+                        color: #ffc107 !important;
+                    }
+                    .favorite-btn:hover {
+                        color: #ff6b6b !important;
+                        transform: scale(1.1);
+                    }
+                    .favorite-btn:focus {
+                        outline: none;
+                        box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+                    }
+                </style>
+            </t>
+        </template> -->
+
+        
+        <!-- Interest Form -->
+        <template id="interest_form" name="Interest Form">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure">
+                    <section class="py-5">
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                <div class="col-md-8">
+                                    <div class="card">
+                                        <div class="card-header bg-primary text-white">
+                                            <h3 class="mb-0">Quan Tâm Bất Động Sản</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <!-- Property Info -->
+                                            <div class="alert alert-info mb-4">
+                                                <t t-set="tmpl" t-value="property.product_tmpl_id"/>
+                                                <h5 t-esc="tmpl.name"/>
+                                                <p class="mb-1"><strong>Địa chỉ:</strong> <span t-esc="property.address"/></p>
+                                                <t t-set="smile_pricelist" t-value="website._get_and_cache_current_pricelist() if website else None"/>
+                                                <t t-set="variant" t-value="tmpl.product_variant_id"/>
+                                                <t t-set="smile_price" t-value="smile_pricelist._get_product_price(variant, 1.0) if (smile_pricelist and variant) else tmpl.list_price"/>
+                                                <p class="mb-1"><strong>Giá:</strong>
+                                                    <span t-out="smile_price" t-options="{'widget': 'monetary', 'display_currency': (smile_pricelist.currency_id if smile_pricelist and smile_pricelist.currency_id else website.currency_id)}"/>
+                                                </p>
+                                                <p class="mb-0"><strong>Diện tích:</strong> <span t-esc="property.area"/> m²</p>
+                                            </div>
+                                            
+                                            <!-- Error Message -->
+                                            <div t-if="error" class="alert alert-danger">
+                                                <span t-esc="error"/>
+                                            </div>
+                                            
+                                            <!-- Interest Form -->
+                                            <form t-attf-action="/smileliving/submit_interest/{{property.product_tmpl_id.id}}" method="POST">
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="name" class="form-label">Họ tên *</label>
+                                                        <input type="text" class="form-control" id="name" name="name" 
+                                                               t-att-value="values.get('name', '') if values else ''" required="required"/>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="email" class="form-label">Email *</label>
+                                                        <input type="email" class="form-control" id="email" name="email" 
+                                                               t-att-value="values.get('email', '') if values else ''" required="required"/>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="phone" class="form-label">Số điện thoại *</label>
+                                                        <input type="tel" class="form-control" id="phone" name="phone" 
+                                                               t-att-value="values.get('phone', '') if values else ''" required="required"/>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="message" class="form-label">Tin nhắn</label>
+                                                    <textarea class="form-control" id="message" name="message" rows="4" 
+                                                              t-esc="values.get('message', '') if values else ''"></textarea>
+                                                </div>
+                                                <div class="d-flex justify-content-between">
+                                                     <a t-att-href="property.product_tmpl_id.website_url" class="btn btn-secondary">
+                                                        <i class="fa fa-arrow-left"></i> Quay lại
+                                                    </a>
+                                                    <button type="submit" class="btn btn-primary">
+                                                        <i class="fa fa-paper-plane"></i> Gửi Yêu Cầu
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </t>
+        </template>
+
+        <!-- Interest Success -->
+        <template id="interest_success" name="Interest Success">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure">
+                    <section class="py-5">
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                <div class="col-md-8">
+                                    <div class="card">
+                                        <div class="card-header bg-success text-white">
+                                            <h3 class="mb-0">Gửi Yêu Cầu Thành Công!</h3>
+                                        </div>
+                                        <div class="card-body text-center">
+                                            <div class="mb-4">
+                                                <i class="fa fa-check-circle text-success" style="font-size: 4rem;"></i>
+                                            </div>
+                                            <h4>Cảm ơn <span t-esc="customer_name"/> đã quan tâm!</h4>
+                                            <p class="text-muted mb-4">
+                                                <t t-set="tmpl" t-value="property.product_tmpl_id"/>
+                                                Chúng tôi đã nhận được yêu cầu quan tâm bất động sản <strong t-esc="tmpl.name"/>.
+                                                Đội ngũ bán hàng sẽ liên hệ với bạn trong thời gian sớm nhất.
+                                            </p>
+                                            
+                                            <div class="alert alert-info text-start">
+                                                <t t-set="smile_pricelist" t-value="website._get_and_cache_current_pricelist() if website else None"/>
+                                                <t t-set="variant" t-value="tmpl.product_variant_id"/>
+                                                <t t-set="smile_price" t-value="smile_pricelist._get_product_price(variant, 1.0) if (smile_pricelist and variant) else tmpl.list_price"/>
+                                                <h6>Thông tin bất động sản:</h6>
+                                                <p class="mb-1"><strong>Tên:</strong> <span t-esc="tmpl.name"/></p>
+                                                <p class="mb-1"><strong>Địa chỉ:</strong> <span t-esc="property.address"/></p>
+                                                <p class="mb-1"><strong>Giá:</strong>
+                                                    <span t-out="smile_price" t-options="{'widget': 'monetary', 'display_currency': (smile_pricelist.currency_id if smile_pricelist and smile_pricelist.currency_id else website.currency_id)}"/>
+                                                </p>
+                                                <p class="mb-0"><strong>Diện tích:</strong> <span t-esc="property.area"/> m²</p>
+                                            </div>
+                                            
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <a href="/smileliving" class="btn btn-primary">
+                                                    <i class="fa fa-home"></i> Xem thêm bất động sản
+                                                </a>
+                                                <a t-att-href="tmpl.website_url" class="btn btn-outline-primary">
+                                                    <i class="fa fa-info-circle"></i> Xem chi tiết
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </t>
+        </template>
+
+        <!-- Filter BĐS cho trang shop - Theo cấu trúc website_sale -->
+        <template id="smileliving_shop_filters" inherit_id="website_sale.products" name="SmileLiving Shop Filters">
+            <!-- Tắt filter theo giá mặc định (Price Range) của website_sale -->
+            <xpath expr="//t[@t-set='opt_wsale_filter_price']" position="replace">
+                <t t-set="opt_wsale_filter_price" t-value="False"/>
+            </xpath>
+
+            <!-- Đảm bảo sidebar hiển thị khi có filter SmileLiving -->
+            <xpath expr="//t[@t-set='hasLeftColumn']" position="replace">
+                <t t-set="hasLeftColumn" t-value="True"/>
+            </xpath>
+            
+            <!-- Thêm filter vào div products_attributes_filters (theo cấu trúc website_sale) -->
+            <xpath expr="//div[contains(@t-attf-class, 'products_attributes_filters')]" position="inside">
+                <!-- Filter Loại (type_sale) - Mua bán / Cho thuê -->
+                <div class="accordion-item mt-4">
+                    <div class="accordion-header h6 mb-0">
+                        <button class="accordion-button px-0 bg-transparent shadow-none"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                aria-expanded="true"
+                                data-bs-target="#smileliving_sale_type_filter">
+                            <b>Loại</b>
+                        </button>
+                    </div>
+                    <div id="smileliving_sale_type_filter" class="accordion-collapse collapse show">
+                        <div class="flex-column mb-3">
+                            <form method="get" t-att-action="keep(type_sale=0)">
+                                <!-- Option "Tất cả" -->
+                                <div class="form-check mb-1">
+                                    <input type="radio"
+                                           name="type_sale"
+                                           class="form-check-input"
+                                           id="sale_type_all"
+                                           value=""
+                                           t-att-checked="'checked' if not type_sale else None"
+                                           onchange="this.form.submit()"/>
+                                    <label class="form-check-label fw-normal" for="sale_type_all">Tất cả</label>
+                                </div>
+                                <div class="form-check mb-1">
+                                    <input type="radio"
+                                           name="type_sale"
+                                           class="form-check-input"
+                                           id="sale_type_sale"
+                                           value="sale"
+                                           t-att-checked="'checked' if type_sale == 'sale' else None"
+                                           onchange="this.form.submit()"/>
+                                    <label class="form-check-label fw-normal" for="sale_type_sale">Mua bán</label>
+                                </div>
+                                <div class="form-check mb-1">
+                                    <input type="radio"
+                                           name="type_sale"
+                                           class="form-check-input"
+                                           id="sale_type_rent"
+                                           value="rent"
+                                           t-att-checked="'checked' if type_sale == 'rent' else None"
+                                           onchange="this.form.submit()"/>
+                                    <label class="form-check-label fw-normal" for="sale_type_rent">Cho thuê</label>
+                                </div>
+
+                                <!-- Giữ lại các filter khác -->
+                                <t t-if="search">
+                                    <input type="hidden" name="search" t-att-value="search"/>
+                                </t>
+                                <t t-if="category">
+                                    <input type="hidden" name="category" t-att-value="category.id"/>
+                                </t>
+                                <t t-if="attrib_values">
+                                    <t t-foreach="attrib_values" t-as="attrib_value">
+                                        <input type="hidden" name="attribute_values" t-att-value="attrib_value"/>
+                                    </t>
+                                </t>
+                                <t t-if="tags">
+                                    <input type="hidden" name="tags" t-att-value="tags"/>
+                                </t>
+                                <!-- Không giữ filter giá -->
+                                <t t-if="filter_type_id">
+                                    <t t-set="selected_types" t-value="filter_type_id if isinstance(filter_type_id, list) else ([filter_type_id] if filter_type_id else [])"/>
+                                    <t t-foreach="selected_types" t-as="tid">
+                                        <input type="hidden" name="filter_type_id" t-att-value="tid"/>
+                                    </t>
+                                </t>
+                                <t t-if="filter_amenity_id">
+                                    <t t-set="selected_amenities" t-value="filter_amenity_id if isinstance(filter_amenity_id, list) else ([filter_amenity_id] if filter_amenity_id else [])"/>
+                                    <t t-foreach="selected_amenities" t-as="aid">
+                                        <input type="hidden" name="filter_amenity_id" t-att-value="aid"/>
+                                    </t>
+                                </t>
+                                <t t-if="filter_area_min">
+                                    <input type="hidden" name="filter_area_min" t-att-value="filter_area_min"/>
+                                </t>
+                                <t t-if="filter_area_max">
+                                    <input type="hidden" name="filter_area_max" t-att-value="filter_area_max"/>
+                                </t>
+                                <t t-if="tinhthanh_id">
+                                    <input type="hidden" name="tinhthanh_id" t-att-value="tinhthanh_id"/>
+                                </t>
+                                <t t-if="quanhuyen_id">
+                                    <input type="hidden" name="quanhuyen_id" t-att-value="quanhuyen_id"/>
+                                </t>
+                                <t t-if="phuongxa_id">
+                                    <input type="hidden" name="phuongxa_id" t-att-value="phuongxa_id"/>
+                                </t>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Loại hình BĐS (type_id) -->
+
+
+                <!-- Filter Khu vực (preset theo tỉnh/thành) -->
+                <div class="accordion-item">
+                    <div class="accordion-header h6 mb-0">
+                        <button class="accordion-button px-0 bg-transparent shadow-none"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                aria-expanded="true"
+                                data-bs-target="#smileliving_region_filter">
+                            <b>Khu vực</b>
+                        </button>
+                    </div>
+                    <div id="smileliving_region_filter" class="accordion-collapse collapse show">
+                        <div class="flex-column mb-3">
+                            <form method="get" t-att-action="keep(tinhthanh_id=0, quanhuyen_id=0, phuongxa_id=0)">
+                                <!-- Option "Tất cả" -->
+                                <div class="form-check mb-1">
+                                    <input type="radio"
+                                           name="tinhthanh_id"
+                                           class="form-check-input"
+                                           id="region_all"
+                                           value=""
+                                           t-att-checked="'checked' if not tinhthanh_id else None"
+                                           onchange="this.form.submit()"/>
+                                    <label class="form-check-label fw-normal" for="region_all">Tất cả</label>
+                                </div>
+                                <div class="form-check mb-1">
+                                    <input type="radio"
+                                           name="tinhthanh_id"
+                                           class="form-check-input"
+                                           id="region_hcm"
+                                           value="58"
+                                           t-att-checked="'checked' if str(tinhthanh_id) == '58' else None"
+                                           onchange="this.form.submit()"/>
+                                    <label class="form-check-label fw-normal" for="region_hcm">TP Hồ Chí Minh</label>
+                                </div>
+                                <div class="form-check mb-1">
+                                    <input type="radio"
+                                           name="tinhthanh_id"
+                                           class="form-check-input"
+                                           id="region_hn"
+                                           value="24"
+                                           t-att-checked="'checked' if str(tinhthanh_id) == '24' else None"
+                                           onchange="this.form.submit()"/>
+                                    <label class="form-check-label fw-normal" for="region_hn">Hà Nội</label>
+                                </div>
+                                <div class="form-check mb-1">
+                                    <input type="radio"
+                                           name="tinhthanh_id"
+                                           class="form-check-input"
+                                           id="region_dn"
+                                           value="15"
+                                           t-att-checked="'checked' if str(tinhthanh_id) == '15' else None"
+                                           onchange="this.form.submit()"/>
+                                    <label class="form-check-label fw-normal" for="region_dn">Đà Nẵng</label>
+                                </div>
+
+                                <!-- Giữ lại các filter khác -->
+                                <t t-if="search">
+                                    <input type="hidden" name="search" t-att-value="search"/>
+                                </t>
+                                <t t-if="category">
+                                    <input type="hidden" name="category" t-att-value="category.id"/>
+                                </t>
+                                <t t-if="attrib_values">
+                                    <t t-foreach="attrib_values" t-as="attrib_value">
+                                        <input type="hidden" name="attribute_values" t-att-value="attrib_value"/>
+                                    </t>
+                                </t>
+                                <t t-if="tags">
+                                    <input type="hidden" name="tags" t-att-value="tags"/>
+                                </t>
+                                <!-- Không giữ filter giá -->
+                                <t t-if="filter_type_id">
+                                    <t t-set="selected_types" t-value="filter_type_id if isinstance(filter_type_id, list) else ([filter_type_id] if filter_type_id else [])"/>
+                                    <t t-foreach="selected_types" t-as="tid">
+                                        <input type="hidden" name="filter_type_id" t-att-value="tid"/>
+                                    </t>
+                                </t>
+                                <t t-if="type_sale">
+                                    <input type="hidden" name="type_sale" t-att-value="type_sale"/>
+                                </t>
+                                <t t-if="filter_amenity_id">
+                                    <t t-set="selected_amenities" t-value="filter_amenity_id if isinstance(filter_amenity_id, list) else ([filter_amenity_id] if filter_amenity_id else [])"/>
+                                    <t t-foreach="selected_amenities" t-as="aid">
+                                        <input type="hidden" name="filter_amenity_id" t-att-value="aid"/>
+                                    </t>
+                                </t>
+                                <t t-if="filter_area_min">
+                                    <input type="hidden" name="filter_area_min" t-att-value="filter_area_min"/>
+                                </t>
+                                <t t-if="filter_area_max">
+                                    <input type="hidden" name="filter_area_max" t-att-value="filter_area_max"/>
+                                </t>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Diện tích (area) - Giống như price range filter -->
+                <div class="accordion-item mb-3">
+                    <div class="accordion-header h6 mb-0">
+                        <button class="accordion-button px-0 bg-transparent shadow-none"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                aria-expanded="true"
+                                data-bs-target="#smileliving_area_filter">
+                            <b>Diện tích (m²)</b>
+                        </button>
+                    </div>
+                    <div id="smileliving_area_filter" class="accordion-collapse collapse show">
+                        <div id="smileliving_area_range_option" class="position-relative">
+                            <input
+                                type="range"
+                                multiple="multiple"
+                                class="form-range range-with-input"
+                                t-att-data-url="keep(filter_area_min=0, filter_area_max=0)"
+                                t-att-step="1"
+                                t-att-min="'%f' % (available_min_area)"
+                                t-att-max="'%f' % (available_max_area)"
+                                t-att-value="'%f,%f' % (filter_area_min, filter_area_max)"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Tiện ích (amenity) - chọn nhiều qua modal, hiển thị dạng tag -->
+                <div class="accordion-item mb-3">
+                    <div class="accordion-header h6 mb-0">
+                        <button class="accordion-button px-0 bg-transparent shadow-none"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                aria-expanded="true"
+                                data-bs-target="#smileliving_amenity_filter">
+                            <b>Tiện ích</b>
+                        </button>
+                    </div>
+                    <div id="smileliving_amenity_filter" class="accordion-collapse collapse show">
+                        <div class="flex-column mb-3">
+                            <t t-set="selected_amenities" t-value="filter_amenity_id if isinstance(filter_amenity_id, list) else ([filter_amenity_id] if filter_amenity_id else [])"/>
+
+                            <div class="bg-white border rounded p-3">
+                                <button type="button" class="btn btn-outline-secondary w-100 mb-3" data-bs-toggle="modal" data-bs-target="#amenityModal">
+                                    Chọn tiện ích
+                                </button>
+
+                                <div class="d-flex flex-wrap gap-2" t-if="selected_amenities">
+                                    <t t-foreach="amenities" t-as="am">
+                                        <t t-if="str(am.id) in [str(x) for x in selected_amenities]">
+                                            <span class="badge bg-secondary" t-esc="am.name"/>
+                                        </t>
+                                    </t>
+                                </div>
+                                <div class="text-muted" t-if="not selected_amenities">
+                                    Chưa chọn tiện ích
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+
+        <!-- Ẩn filter attributes mặc định của website_sale (Color, Height, Duration, Fabric, Legs) -->
+        <template id="smileliving_hide_default_attributes" inherit_id="website_sale.products_attributes" name="Hide Default Attributes Filters">
+            <!-- Thay thế toàn bộ nội dung bằng rỗng để ẩn các filter attributes -->
+            <xpath expr="//div[@id='wsale_products_attributes_collapse']" position="replace">
+                <!-- Ẩn filter attributes mặc định -->
+            </xpath>
+        </template>
+
+        <!-- Đổi nhãn Price Range mặc định thành "Giá" -->
+        <template id="smileliving_remove_default_price_range" inherit_id="website_sale.filter_products_price" name="SmileLiving Rename Price Range">
+            <xpath expr="//b[normalize-space()='Price Range']" position="replace">
+                <b>Giá</b>
+            </xpath>
+        </template>
+
+
+
+        <template id="remove_filmstrip" inherit_id="website_sale.products">
+            <xpath expr="//t[@t-call='website_sale.filmstrip_categories']" position="replace">
+                <!-- Thanh tìm kiếm SmileLiving -->
+                <div class="search-bar bg-white rounded shadow-sm p-3 mb-4">
+                    <form method="get" t-att-action="keep(page=0)" class="d-flex align-items-center gap-2">
+                        <!-- Hidden inputs to carry location filters -->
+                        <input type="hidden" name="tinhthanh_id" id="location_tinhthanh_id" t-att-value="tinhthanh_id"/>
+                        <input type="hidden" name="quanhuyen_id" id="location_quanhuyen_id" t-att-value="quanhuyen_id"/>
+                        <input type="hidden" name="phuongxa_id" id="location_phuongxa_id" t-att-value="phuongxa_id"/>
+                        <!-- Carry SmileLiving property filters so search/location keeps them -->
+                        <t t-if="type_sale">
+                            <input type="hidden" name="type_sale" t-att-value="type_sale"/>
+                        </t>
+                        <t t-if="filter_area_min">
+                            <input type="hidden" name="filter_area_min" t-att-value="filter_area_min"/>
+                        </t>
+                        <t t-if="filter_area_max">
+                            <input type="hidden" name="filter_area_max" t-att-value="filter_area_max"/>
+                        </t>
+                        <t t-if="filter_type_id">
+                            <t t-set="selected_types" t-value="filter_type_id if isinstance(filter_type_id, list) else ([filter_type_id] if filter_type_id else [])"/>
+                            <t t-foreach="selected_types" t-as="tid">
+                                <input type="hidden" name="filter_type_id" t-att-value="tid"/>
+                            </t>
+                        </t>
+                        <t t-if="filter_amenity_id">
+                            <t t-set="selected_amenities" t-value="filter_amenity_id if isinstance(filter_amenity_id, list) else ([filter_amenity_id] if filter_amenity_id else [])"/>
+                            <t t-foreach="selected_amenities" t-as="aid">
+                                <input type="hidden" name="filter_amenity_id" t-att-value="aid"/>
+                            </t>
+                        </t>
+                        <div class="flex-grow-1">
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent border-0">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                                <input type="text" 
+                                       name="search" 
+                                       class="form-control border-0 ps-0" 
+                                       placeholder="Tìm bất động sản..."
+                                       t-att-value="search"/>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#locationModal">
+                            <i class="fa fa-map-marker"></i> Chọn khu vực
+                            <span class="badge bg-danger ms-1 d-none" id="locationBadge"></span>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#propertyTypeModal">
+                            <i class="fa fa-building"></i> Loại hình BĐS
+                            <span class="badge bg-danger ms-1 d-none" id="propertyTypeBadge"></span>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#priceModal">
+                            <i class="fa fa-tag"></i> Giá bán
+                            <span class="badge bg-danger ms-1 d-none" id="priceBadge"></span>
+                        </button>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fa fa-search"></i> Tìm nhà
+                        </button>
+                        <a href="/shop" class="btn btn-outline-secondary">
+                            <i class="fa fa-times"></i> Xóa lọc
+                        </a>
+                    </form>
+                </div>
+
+                <!-- Price Range Modal -->
+                <div class="modal fade" id="priceModal" tabindex="-1" aria-labelledby="priceModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="priceModalLabel">Giá bán</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="priceForm" method="get" t-att-action="keep(min_price=0, max_price=0)">
+                            
+                                    <div id="smileliving_price_range_option" class="position-relative mb-3">
+                                        <input
+                                            type="range"
+                                            multiple="multiple"
+                                            class="form-range range-with-input"
+                                            id="smileliving_price_range"
+                                            t-att-step="1000000"
+                                            t-att-min="0"
+                                            t-att-max="30000000000"
+                                            t-att-value="'%s,%s' % (request.params.get('min_price') or 0, request.params.get('max_price') or 30000000000)"
+                                        />
+                                    </div>
+
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="priceMinDisplay" inputmode="numeric" autocomplete="off"/>
+                                                <span class="input-group-text">đ</span>
+                                            </div>
+                                            <small class="text-muted">Giá tối thiểu</small>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="priceMaxDisplay" inputmode="numeric" autocomplete="off"/>
+                                                <span class="input-group-text">đ</span>
+                                            </div>
+                                            <small class="text-muted">Giá tối đa</small>
+                                        </div>
+                                    </div>
+
+                                    <input type="hidden" name="min_price" id="priceMin" t-att-value="request.params.get('min_price')"/>
+                                    <input type="hidden" name="max_price" id="priceMax" t-att-value="request.params.get('max_price')"/>
+
+                                    <!-- Keep other filters -->
+                                    <t t-if="search">
+                                        <input type="hidden" name="search" t-att-value="search"/>
+                                    </t>
+                                    <t t-if="category">
+                                        <input type="hidden" name="category" t-att-value="category.id"/>
+                                    </t>
+                                    <t t-if="attrib_values">
+                                        <t t-foreach="attrib_values" t-as="attrib_value">
+                                            <input type="hidden" name="attribute_values" t-att-value="attrib_value"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="tags">
+                                        <input type="hidden" name="tags" t-att-value="tags"/>
+                                    </t>
+                                    <t t-if="filter_type_id">
+                                        <t t-set="selected_types" t-value="filter_type_id if isinstance(filter_type_id, list) else ([filter_type_id] if filter_type_id else [])"/>
+                                        <t t-foreach="selected_types" t-as="tid">
+                                            <input type="hidden" name="filter_type_id" t-att-value="tid"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="filter_amenity_id">
+                                        <t t-set="selected_amenities" t-value="filter_amenity_id if isinstance(filter_amenity_id, list) else ([filter_amenity_id] if filter_amenity_id else [])"/>
+                                        <t t-foreach="selected_amenities" t-as="aid">
+                                            <input type="hidden" name="filter_amenity_id" t-att-value="aid"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="type_sale">
+                                        <input type="hidden" name="type_sale" t-att-value="type_sale"/>
+                                    </t>
+                                    <t t-if="filter_area_min">
+                                        <input type="hidden" name="filter_area_min" t-att-value="filter_area_min"/>
+                                    </t>
+                                    <t t-if="filter_area_max">
+                                        <input type="hidden" name="filter_area_max" t-att-value="filter_area_max"/>
+                                    </t>
+                                    <t t-if="tinhthanh_id">
+                                        <input type="hidden" name="tinhthanh_id" t-att-value="tinhthanh_id"/>
+                                    </t>
+                                    <t t-if="quanhuyen_id">
+                                        <input type="hidden" name="quanhuyen_id" t-att-value="quanhuyen_id"/>
+                                    </t>
+                                    <t t-if="phuongxa_id">
+                                        <input type="hidden" name="phuongxa_id" t-att-value="phuongxa_id"/>
+                                    </t>
+                                </form>
+                            </div>
+                            <div class="modal-footer d-flex justify-content-between gap-2">
+                                <a class="btn btn-outline-secondary" t-att-href="keep(min_price=0, max_price=0)" style="width:45%">
+                                    Xóa lọc
+                                </a>
+                                <button type="button" class="btn btn-warning" id="applyPriceBtn" style="width:45%">
+                                    Áp dụng
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location Selection Modal -->
+                <div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="locationModalLabel">Khu vực</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="provinceSelect" class="form-label">Chọn tỉnh thành <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="provinceSelect" name="tinhthanh_id">
+                                            <option value="">Toàn quốc</option>
+                                            <t t-foreach="tinhthanhs" t-as="tinhthanh">
+                                                <option t-att-value="tinhthanh.id" t-esc="tinhthanh.name"/>
+                                            </t>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="districtSelect" class="form-label">Chọn quận huyện <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="districtSelect" name="quanhuyen_id">
+                                            <option value="">Chọn quận huyện</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="wardSelect" class="form-label">Chọn phường xã <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="wardSelect" name="phuongxa_id">
+                                            <option value="">Chọn phường xã</option>
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-warning w-100" id="applyLocationBtn">Áp dụng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Property Type Selection Modal -->
+                <div class="modal fade" id="propertyTypeModal" tabindex="-1" aria-labelledby="propertyTypeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="propertyTypeModalLabel">Loại hình BĐS</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="propertyTypeForm" method="get" t-att-action="keep(filter_type_id=0)">
+                                    <t t-set="selected_types" t-value="filter_type_id if isinstance(filter_type_id, list) else ([filter_type_id] if filter_type_id else [])"/>
+                                    <div class="mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="filter_type_id" value="" id="ptype_all_modal" t-att-checked="'checked' if not selected_types else None"/>
+                                            <label class="form-check-label" for="ptype_all_modal">Tất cả</label>
+                                        </div>
+                                    </div>
+                                    <t t-foreach="property_types" t-as="ptype">
+                                        <div class="mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input"
+                                                       type="checkbox"
+                                                       name="filter_type_id"
+                                                       t-att-value="ptype.id"
+                                                       t-att-id="'ptype_modal_' + str(ptype.id)"
+                                                       t-att-checked="'checked' if (selected_types and str(ptype.id) in [str(x) for x in selected_types]) else None"/>
+                                                <label class="form-check-label" t-att-for="'ptype_modal_' + str(ptype.id)" t-esc="ptype.name"/>
+                                            </div>
+                                        </div>
+                                    </t>
+
+                                    <!-- Keep other filters -->
+                                    <t t-if="search">
+                                        <input type="hidden" name="search" t-att-value="search"/>
+                                    </t>
+                                    <t t-if="tinhthanh_id">
+                                        <input type="hidden" name="tinhthanh_id" t-att-value="tinhthanh_id"/>
+                                    </t>
+                                    <t t-if="quanhuyen_id">
+                                        <input type="hidden" name="quanhuyen_id" t-att-value="quanhuyen_id"/>
+                                    </t>
+                                    <t t-if="phuongxa_id">
+                                        <input type="hidden" name="phuongxa_id" t-att-value="phuongxa_id"/>
+                                    </t>
+                                    <t t-if="type_sale">
+                                        <input type="hidden" name="type_sale" t-att-value="type_sale"/>
+                                    </t>
+                                    <t t-if="filter_area_min">
+                                        <input type="hidden" name="filter_area_min" t-att-value="filter_area_min"/>
+                                    </t>
+                                    <t t-if="filter_area_max">
+                                        <input type="hidden" name="filter_area_max" t-att-value="filter_area_max"/>
+                                    </t>
+                                    <!-- Không giữ filter giá -->
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-warning w-100" onclick="document.getElementById('propertyTypeForm').submit();">Áp dụng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Amenity Selection Modal -->
+                <div class="modal fade" id="amenityModal" tabindex="-1" aria-labelledby="amenityModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="amenityModalLabel">Tiện ích</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="amenityForm" method="get" t-att-action="keep(filter_amenity_id=0)">
+                                    <t t-set="selected_amenities" t-value="filter_amenity_id if isinstance(filter_amenity_id, list) else ([filter_amenity_id] if filter_amenity_id else [])"/>
+
+                                    <div class="mb-2">
+                                        <input type="text" class="form-control" id="amenitySearch" placeholder="Tìm tiện ích..." autocomplete="off"/>
+                                    </div>
+
+                                    <div class="border rounded p-2" style="max-height: 320px; overflow:auto;">
+                                        <t t-foreach="amenities" t-as="am">
+                                            <div class="form-check mb-1 amenity-item" t-att-data-name="am.name">
+                                                <input class="form-check-input"
+                                                       type="checkbox"
+                                                       name="filter_amenity_id"
+                                                       t-att-id="'amenity_' + str(am.id)"
+                                                       t-att-value="am.id"
+                                                       t-att-checked="'checked' if (selected_amenities and str(am.id) in [str(x) for x in selected_amenities]) else None"/>
+                                                <label class="form-check-label" t-att-for="'amenity_' + str(am.id)" t-esc="am.name"/>
+                                            </div>
+                                        </t>
+                                    </div>
+
+                                    <!-- Keep other filters -->
+                                    <t t-if="search">
+                                        <input type="hidden" name="search" t-att-value="search"/>
+                                    </t>
+                                    <t t-if="tinhthanh_id">
+                                        <input type="hidden" name="tinhthanh_id" t-att-value="tinhthanh_id"/>
+                                    </t>
+                                    <t t-if="quanhuyen_id">
+                                        <input type="hidden" name="quanhuyen_id" t-att-value="quanhuyen_id"/>
+                                    </t>
+                                    <t t-if="phuongxa_id">
+                                        <input type="hidden" name="phuongxa_id" t-att-value="phuongxa_id"/>
+                                    </t>
+                                    <t t-if="type_sale">
+                                        <input type="hidden" name="type_sale" t-att-value="type_sale"/>
+                                    </t>
+                                    <t t-if="filter_area_min">
+                                        <input type="hidden" name="filter_area_min" t-att-value="filter_area_min"/>
+                                    </t>
+                                    <t t-if="filter_area_max">
+                                        <input type="hidden" name="filter_area_max" t-att-value="filter_area_max"/>
+                                    </t>
+                                    <t t-if="filter_type_id">
+                                        <t t-set="selected_types" t-value="filter_type_id if isinstance(filter_type_id, list) else ([filter_type_id] if filter_type_id else [])"/>
+                                        <t t-foreach="selected_types" t-as="tid">
+                                            <input type="hidden" name="filter_type_id" t-att-value="tid"/>
+                                        </t>
+                                    </t>
+                                    <!-- Không giữ filter giá -->
+                                </form>
+                            </div>
+                            <div class="modal-footer d-flex justify-content-between gap-2">
+                                <a class="btn btn-outline-secondary" t-att-href="keep(filter_amenity_id=0)" style="width:45%">
+                                    Xóa lọc
+                                </a>
+                                <button type="button" class="btn btn-warning" style="width:45%" onclick="document.getElementById('amenityForm').submit();">
+                                    Áp dụng
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- JavaScript cho location modal -->
+                <script type="text/javascript">
+                    <![CDATA[
+                    document.addEventListener('DOMContentLoaded', function() {
+                        var provinceSelect = document.getElementById('provinceSelect');
+                        var districtSelect = document.getElementById('districtSelect');
+                        var wardSelect = document.getElementById('wardSelect');
+                        var applyBtn = document.getElementById('applyLocationBtn');
+                        var hiddenTinh = document.getElementById('location_tinhthanh_id');
+                        var hiddenQuan = document.getElementById('location_quanhuyen_id');
+                        var hiddenPhuong = document.getElementById('location_phuongxa_id');
+                        var searchForm = document.querySelector('.search-bar form');
+                        var locationBadge = document.getElementById('locationBadge');
+                        var propertyTypeBadge = document.getElementById('propertyTypeBadge');
+                        var priceBadge = document.getElementById('priceBadge');
+
+                        // Price modal
+                        var priceRange = document.getElementById('smileliving_price_range');
+                        var priceMinDisplay = document.getElementById('priceMinDisplay');
+                        var priceMaxDisplay = document.getElementById('priceMaxDisplay');
+                        var priceMin = document.getElementById('priceMin');
+                        var priceMax = document.getElementById('priceMax');
+                        var applyPriceBtn = document.getElementById('applyPriceBtn');
+                        var priceForm = document.getElementById('priceForm');
+                        var priceRangeLabel = document.getElementById('priceRangeLabel');
+
+                        function parseMoney(val) {
+                            if (val === null || val === undefined) {
+                                return NaN;
+                            }
+                            var cleaned = String(val).replace(/[^0-9]/g, '');
+                            return cleaned ? parseInt(cleaned, 10) : NaN;
+                        }
+
+                        function formatMoney(val) {
+                            if (val === null || val === undefined || isNaN(val)) {
+                                return '';
+                            }
+                            return String(Math.trunc(val)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                        }
+
+                        function getRangeLowHigh(rangeEl) {
+                            if (!rangeEl) {
+                                return { low: NaN, high: NaN };
+                            }
+                            if (typeof rangeEl.valueLow !== 'undefined' && typeof rangeEl.valueHigh !== 'undefined') {
+                                return { low: parseFloat(rangeEl.valueLow), high: parseFloat(rangeEl.valueHigh) };
+                            }
+                            var parts = String(rangeEl.value || '').split(',');
+                            if (parts.length === 2) {
+                                return { low: parseFloat(parts[0]), high: parseFloat(parts[1]) };
+                            }
+                            return { low: parseFloat(rangeEl.min), high: parseFloat(rangeEl.max) };
+                        }
+
+                        function setPriceHidden(low, high) {
+                            if (priceMin) {
+                                priceMin.value = String(Math.trunc(low));
+                            }
+                            if (priceMax) {
+                                priceMax.value = String(Math.trunc(high));
+                            }
+                        }
+
+                        function syncPriceDisplaysFromHidden() {
+                            var low = parseMoney(priceMin ? priceMin.value : '');
+                            var high = parseMoney(priceMax ? priceMax.value : '');
+                            if (priceRange) {
+                                var minBound = parseFloat(priceRange.min || '0');
+                                var maxBound = parseFloat(priceRange.max || '0');
+                                if (isNaN(low)) {
+                                    low = minBound;
+                                }
+                                if (isNaN(high)) {
+                                    high = maxBound;
+                                }
+                                if (low > high) {
+                                    var tmp = low; low = high; high = tmp;
+                                }
+                                setPriceHidden(low, high);
+                            }
+                            if (priceMinDisplay) {
+                                priceMinDisplay.value = formatMoney(low);
+                            }
+                            if (priceMaxDisplay) {
+                                priceMaxDisplay.value = formatMoney(high);
+                            }
+                        }
+
+                        function syncPriceFromRange() {
+                            if (!priceRange) {
+                                return;
+                            }
+                            var r = getRangeLowHigh(priceRange);
+                            var low = r.low;
+                            var high = r.high;
+                            if (isNaN(low) || isNaN(high)) {
+                                return;
+                            }
+                            if (low > high) {
+                                var tmp = low; low = high; high = tmp;
+                            }
+                            setPriceHidden(low, high);
+                            if (priceMinDisplay) {
+                                priceMinDisplay.value = formatMoney(low);
+                            }
+                            if (priceMaxDisplay) {
+                                priceMaxDisplay.value = formatMoney(high);
+                            }
+                        }
+
+                        function updatePriceRangeLabel() {
+                            if (!priceRangeLabel || !priceRange) {
+                                return;
+                            }
+                            var maxTy = Math.round(parseFloat(priceRange.max || '30000000000') / 1000000000);
+                            priceRangeLabel.textContent = '0 - ' + String(maxTy) + ' tỷ';
+                        }
+
+                        if (priceRange) {
+                            updatePriceRangeLabel();
+                            // Initialize from query params
+                            syncPriceDisplaysFromHidden();
+                            priceRange.addEventListener('input', syncPriceFromRange);
+                            priceRange.addEventListener('change', syncPriceFromRange);
+                            // Odoo's multi-range polyfill dispatches this when either handle moves
+                            priceRange.addEventListener('newRangeValue', syncPriceFromRange);
+
+                            // Some browsers/polyfill combinations only emit `newRangeValue` on release for the high handle.
+                            // To keep the UI responsive, sync continuously while dragging.
+                            var isDraggingPrice = false;
+                            var rafScheduled = false;
+
+                            function schedulePriceSync() {
+                                if (rafScheduled) {
+                                    return;
+                                }
+                                rafScheduled = true;
+                                window.requestAnimationFrame(function() {
+                                    rafScheduled = false;
+                                    if (isDraggingPrice) {
+                                        syncPriceFromRange();
+                                    }
+                                });
+                            }
+
+                            function onPriceDragStart() {
+                                isDraggingPrice = true;
+                                syncPriceFromRange();
+                            }
+
+                            function onPriceDragEnd() {
+                                isDraggingPrice = false;
+                                syncPriceFromRange();
+                            }
+
+                            // Use events on both the range and its container to catch the polyfilled handles.
+                            var priceRangeContainer = document.getElementById('smileliving_price_range_option');
+                            var dragStartTargets = [priceRange, priceRangeContainer].filter(Boolean);
+                            dragStartTargets.forEach(function(el) {
+                                el.addEventListener('pointerdown', onPriceDragStart);
+                                el.addEventListener('mousedown', onPriceDragStart);
+                                el.addEventListener('touchstart', onPriceDragStart, { passive: true });
+                            });
+
+                            // While dragging, listen at document level (handles may live outside the input element).
+                            document.addEventListener('pointermove', schedulePriceSync);
+                            document.addEventListener('mousemove', schedulePriceSync);
+                            document.addEventListener('touchmove', schedulePriceSync, { passive: true });
+                            document.addEventListener('pointerup', onPriceDragEnd);
+                            document.addEventListener('mouseup', onPriceDragEnd);
+                            document.addEventListener('touchend', onPriceDragEnd);
+                        }
+
+                        function onPriceInputChanged() {
+                            if (!priceRange) {
+                                return;
+                            }
+                            var minBound = parseFloat(priceRange.min || '0');
+                            var maxBound = parseFloat(priceRange.max || '0');
+                            var low = parseMoney(priceMinDisplay ? priceMinDisplay.value : '');
+                            var high = parseMoney(priceMaxDisplay ? priceMaxDisplay.value : '');
+                            if (isNaN(low)) {
+                                low = minBound;
+                            }
+                            if (isNaN(high)) {
+                                high = maxBound;
+                            }
+                            low = Math.max(minBound, Math.min(maxBound, low));
+                            high = Math.max(minBound, Math.min(maxBound, high));
+                            // Validation: if user sets min > max, mark inputs invalid and do not update the range.
+                            var bothProvided = !isNaN(parseMoney(priceMinDisplay ? priceMinDisplay.value : ''))
+                                && !isNaN(parseMoney(priceMaxDisplay ? priceMaxDisplay.value : ''));
+                            var isInvalid = bothProvided && low > high;
+
+                            if (priceMinDisplay) {
+                                priceMinDisplay.classList.toggle('is-invalid', isInvalid);
+                            }
+                            if (priceMaxDisplay) {
+                                priceMaxDisplay.classList.toggle('is-invalid', isInvalid);
+                            }
+                            if (isInvalid) {
+                                return false;
+                            }
+
+                            function setRangeHandles(nextLow, nextHigh) {
+                                try {
+                                    if (typeof priceRange.valueLow !== 'undefined' && typeof priceRange.valueHigh !== 'undefined') {
+                                        priceRange.valueLow = nextLow;
+                                        priceRange.valueHigh = nextHigh;
+                                    } else {
+                                        priceRange.value = String(nextLow) + ',' + String(nextHigh);
+                                    }
+                                } catch (e) {
+                                    // Fallback for read-only properties
+                                    priceRange.value = String(nextLow) + ',' + String(nextHigh);
+                                }
+                                // Ask the multirange polyfill / listeners to recompute.
+                                try {
+                                    priceRange.dispatchEvent(new Event('input', { bubbles: true }));
+                                } catch (e) {}
+                                try {
+                                    priceRange.dispatchEvent(new Event('newRangeValue', { bubbles: true }));
+                                } catch (e) {}
+                            }
+
+                            setPriceHidden(low, high);
+                            setRangeHandles(low, high);
+                            if (priceMinDisplay) {
+                                priceMinDisplay.value = formatMoney(low);
+                            }
+                            if (priceMaxDisplay) {
+                                priceMaxDisplay.value = formatMoney(high);
+                            }
+                            // Keep the displayed values in sync with the range's computed low/high.
+                            syncPriceFromRange();
+                            return true;
+                        }
+
+                        if (priceMinDisplay) {
+                            priceMinDisplay.addEventListener('input', function() {
+                                // Live validation only
+                                var low = parseMoney(priceMinDisplay.value);
+                                var high = parseMoney(priceMaxDisplay ? priceMaxDisplay.value : '');
+                                var invalid = !isNaN(low) && !isNaN(high) && low > high;
+                                priceMinDisplay.classList.toggle('is-invalid', invalid);
+                                if (priceMaxDisplay) {
+                                    priceMaxDisplay.classList.toggle('is-invalid', invalid);
+                                }
+                            });
+                            priceMinDisplay.addEventListener('blur', function() {
+                                onPriceInputChanged();
+                            });
+                        }
+                        if (priceMaxDisplay) {
+                            priceMaxDisplay.addEventListener('input', function() {
+                                // Live validation only
+                                var low = parseMoney(priceMinDisplay ? priceMinDisplay.value : '');
+                                var high = parseMoney(priceMaxDisplay.value);
+                                var invalid = !isNaN(low) && !isNaN(high) && low > high;
+                                priceMaxDisplay.classList.toggle('is-invalid', invalid);
+                                if (priceMinDisplay) {
+                                    priceMinDisplay.classList.toggle('is-invalid', invalid);
+                                }
+                            });
+                            priceMaxDisplay.addEventListener('blur', function() {
+                                onPriceInputChanged();
+                            });
+                        }
+
+                        if (applyPriceBtn && priceForm) {
+                            applyPriceBtn.addEventListener('click', function() {
+                                var ok = onPriceInputChanged();
+                                if (ok === false) {
+                                    // Keep modal open and show invalid state
+                                    return;
+                                }
+                                priceForm.submit();
+                            });
+                        }
+
+                        // Amenity modal: simple search for long lists
+                        var amenitySearch = document.getElementById('amenitySearch');
+                        if (amenitySearch) {
+                            amenitySearch.addEventListener('input', function() {
+                                var q = String(amenitySearch.value || '').toLowerCase();
+                                document.querySelectorAll('.amenity-item').forEach(function(row) {
+                                    var name = String(row.getAttribute('data-name') || '').toLowerCase();
+                                    row.style.display = (!q || name.indexOf(q) !== -1) ? '' : 'none';
+                                });
+                            });
+                        }
+
+                        // Area range (smileliving.property.area)
+                        var areaRange = document.querySelector('#smileliving_area_range_option input[type="range"]');
+                        function updateAreaFromRange() {
+                            if (!areaRange) {
+                                return;
+                            }
+                            var r = getRangeLowHigh(areaRange);
+                            var low = r.low;
+                            var high = r.high;
+                            if (isNaN(low) || isNaN(high)) {
+                                return;
+                            }
+                            if (low > high) {
+                                var tmp = low; low = high; high = tmp;
+                            }
+
+                            var baseUrl = areaRange.getAttribute('data-url') || '';
+                            if (!baseUrl) {
+                                return;
+                            }
+
+                            var url;
+                            try {
+                                url = new URL(baseUrl, window.location.origin);
+                            } catch (e) {
+                                return;
+                            }
+                            url.searchParams.set('filter_area_min', String(Math.round(low)));
+                            url.searchParams.set('filter_area_max', String(Math.round(high)));
+                            window.location.href = url.pathname + (url.search ? url.search : '');
+                        }
+
+                        if (areaRange) {
+                            areaRange.addEventListener('change', updateAreaFromRange);
+                            // Some multirange polyfills dispatch this custom event
+                            areaRange.addEventListener('newRangeValue', updateAreaFromRange);
+                        }
+
+                        function setBadge(badgeEl, count) {
+                            if (!badgeEl) {
+                                return;
+                            }
+                            if (count && count > 0) {
+                                badgeEl.textContent = String(count);
+                                badgeEl.classList.remove('d-none');
+                            } else {
+                                badgeEl.textContent = '';
+                                badgeEl.classList.add('d-none');
+                            }
+                        }
+
+                        function getSelectedLocationCount() {
+                            var count = 0;
+                            if (hiddenTinh && hiddenTinh.value) { count += 1; }
+                            if (hiddenQuan && hiddenQuan.value) { count += 1; }
+                            if (hiddenPhuong && hiddenPhuong.value) { count += 1; }
+                            return count;
+                        }
+
+                        function updateLocationBadge() {
+                            setBadge(locationBadge, getSelectedLocationCount());
+                        }
+
+                        function getSelectedPropertyTypeCount() {
+                            try {
+                                var params = new URLSearchParams(window.location.search || '');
+                                var values = params.getAll('filter_type_id') || [];
+                                // ignore empty / falsy values (e.g. modal 'Tất cả')
+                                values = values.filter(function(v) { return v && String(v).trim() !== ''; });
+                                return values.length;
+                            } catch (e) {
+                                return 0;
+                            }
+                        }
+
+                        function updatePropertyTypeBadge() {
+                            setBadge(propertyTypeBadge, getSelectedPropertyTypeCount());
+                        }
+
+                        function getSelectedPriceCount() {
+                            try {
+                                var params = new URLSearchParams(window.location.search || '');
+                                var minV = parseMoney(params.get('min_price'));
+                                var maxV = parseMoney(params.get('max_price'));
+
+                                // Default bounds follow the slider.
+                                var minBound = 0;
+                                var maxBound = 30000000000;
+                                if (priceRange) {
+                                    minBound = parseMoney(priceRange.min);
+                                    maxBound = parseMoney(priceRange.max);
+                                    if (isNaN(minBound)) { minBound = 0; }
+                                    if (isNaN(maxBound)) { maxBound = 30000000000; }
+                                }
+
+                                var count = 0;
+                                if (!isNaN(minV) && minV > minBound) {
+                                    count += 1;
+                                }
+                                if (!isNaN(maxV) && maxV < maxBound) {
+                                    count += 1;
+                                }
+                                return count;
+                            } catch (e) {
+                                return 0;
+                            }
+                        }
+
+                        function updatePriceBadge() {
+                            setBadge(priceBadge, getSelectedPriceCount());
+                        }
+
+                        function resetDistrictAndWard() {
+                            if (districtSelect) {
+                                districtSelect.innerHTML = '<option value="">Chọn quận huyện</option>';
+                            }
+                            if (wardSelect) {
+                                wardSelect.innerHTML = '<option value="">Chọn phường xã</option>';
+                            }
+                        }
+
+                        function loadDistricts(tinhthanhId, presetDistrict) {
+                            resetDistrictAndWard();
+                            if (!tinhthanhId) {
+                                return Promise.resolve();
+                            }
+                            return fetch('/smileliving/get_quanhuyen', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    jsonrpc: '2.0',
+                                    method: 'call',
+                                    params: { tinhthanh_id: tinhthanhId },
+                                    id: Math.random()
+                                })
+                            })
+                            .then(function(response) { return response.json(); })
+                            .then(function(response) {
+                                if (response.result && districtSelect) {
+                                    response.result.forEach(function(quanhuyen) {
+                                        var option = document.createElement('option');
+                                        option.value = quanhuyen.id;
+                                        option.textContent = quanhuyen.name;
+                                        districtSelect.appendChild(option);
+                                    });
+                                    if (presetDistrict) {
+                                        districtSelect.value = presetDistrict;
+                                    }
+                                }
+                            });
+                        }
+
+                        function loadWards(quanhuyenId, presetWard) {
+                            if (wardSelect) {
+                                wardSelect.innerHTML = '<option value="">Chọn phường xã</option>';
+                            }
+                            if (!quanhuyenId) {
+                                return Promise.resolve();
+                            }
+                            return fetch('/smileliving/get_phuongxa', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    jsonrpc: '2.0',
+                                    method: 'call',
+                                    params: { quanhuyen_id: quanhuyenId },
+                                    id: Math.random()
+                                })
+                            })
+                            .then(function(response) { return response.json(); })
+                            .then(function(response) {
+                                if (response.result && wardSelect) {
+                                    response.result.forEach(function(phuongxa) {
+                                        var option = document.createElement('option');
+                                        option.value = phuongxa.id;
+                                        option.textContent = phuongxa.name;
+                                        wardSelect.appendChild(option);
+                                    });
+                                    if (presetWard) {
+                                        wardSelect.value = presetWard;
+                                    }
+                                }
+                            });
+                        }
+
+                        if (provinceSelect) {
+                            provinceSelect.addEventListener('change', function() {
+                                var tinhthanhId = this.value;
+                                resetDistrictAndWard();
+                                hiddenTinh.value = tinhthanhId;
+                                hiddenQuan.value = '';
+                                hiddenPhuong.value = '';
+                                loadDistricts(tinhthanhId);
+                                updateLocationBadge();
+                            });
+                        }
+
+                        if (districtSelect) {
+                            districtSelect.addEventListener('change', function() {
+                                var quanhuyenId = this.value;
+                                if (wardSelect) {
+                                    wardSelect.innerHTML = '<option value="">Chọn phường xã</option>';
+                                }
+                                hiddenQuan.value = quanhuyenId;
+                                hiddenPhuong.value = '';
+                                loadWards(quanhuyenId);
+                                updateLocationBadge();
+                            });
+                        }
+
+                        if (wardSelect) {
+                            wardSelect.addEventListener('change', function() {
+                                hiddenPhuong.value = this.value;
+                                updateLocationBadge();
+                            });
+                        }
+
+                        if (applyBtn && searchForm) {
+                            applyBtn.addEventListener('click', function() {
+                                hiddenTinh.value = provinceSelect ? provinceSelect.value : '';
+                                hiddenQuan.value = districtSelect ? districtSelect.value : '';
+                                hiddenPhuong.value = wardSelect ? wardSelect.value : '';
+                                updateLocationBadge();
+                                searchForm.submit();
+                            });
+                        }
+
+                        updateLocationBadge();
+                        updatePropertyTypeBadge();
+                        updatePriceBadge();
+
+                        var presetTinh = hiddenTinh ? hiddenTinh.value : '';
+                        var presetQuan = hiddenQuan ? hiddenQuan.value : '';
+                        var presetPhuong = hiddenPhuong ? hiddenPhuong.value : '';
+
+                        if (presetTinh && provinceSelect) {
+                            provinceSelect.value = presetTinh;
+                            loadDistricts(presetTinh, presetQuan).then(function() {
+                                if (presetQuan) {
+                                    loadWards(presetQuan, presetPhuong);
+                                }
+                            });
+                        }
+                    });
+                    ]]>
+                </script>
+            </xpath>
+        </template>
+
+
+    </data>
+</odoo>

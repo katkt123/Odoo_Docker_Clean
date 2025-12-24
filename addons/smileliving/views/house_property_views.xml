@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Property (vertical model) Tree View -->
+        <record id="view_smileliving_property_tree" model="ir.ui.view">
+            <field name="name">smileliving.property.list</field>
+            <field name="model">smileliving.property</field>
+            <field name="arch" type="xml">
+                <list string="Bất Động Sản">
+                    <field name="product_tmpl_id"/>
+                    <field name="type_id"/>
+                    <field name="type_sale"/>
+                    <field name="area"/>
+                    <field name="house_status"/>
+                    <field name="tinhthanh_id"/>
+                    <field name="quanhuyen_id"/>
+                    <field name="phuongxa_id"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Property (vertical model) Form View -->
+        <record id="view_smileliving_property_form" model="ir.ui.view">
+            <field name="name">smileliving.property.form</field>
+            <field name="model">smileliving.property</field>
+            <field name="arch" type="xml">
+                <form string="Bất Động Sản">
+                    <sheet>
+                        <group string="Hình ảnh">
+                            <field name="product_image_1920" widget="image" class="oe_avatar"/>
+                            <field
+                                name="product_template_image_ids"
+                                class="o_website_sale_image_list"
+                                domain="[('product_tmpl_id', '=', product_tmpl_id)]"
+                                context="{'default_product_tmpl_id': product_tmpl_id.id, 'default_name': product_tmpl_id.name}"
+                                mode="kanban"
+                                add-label="Add Media"
+                                nolabel="1"
+                                widget="x2_many_media_viewer"
+                                options="{'convert_to_webp': True}"
+                            />
+                        </group>
+
+                        <group>
+                            <field name="product_tmpl_id"/>
+                            <field name="type_id"/>
+                            <field name="type_sale"/>
+                            <field name="area"/>
+                            <field name="amenity_ids" widget="many2many_tags"/>
+                            <field name="house_status"/>
+                            <field name="address"/>
+                        </group>
+
+                        <group string="Địa lý">
+                            <field name="tinhthanh_id"/>
+                            <field name="quanhuyen_id" domain="[('tinhthanh_id', '=', tinhthanh_id)]"/>
+                            <field name="phuongxa_id" domain="[('quanhuyen_id', '=', quanhuyen_id)]"/>
+                            <field name="latitude"/>
+                            <field name="longitude"/>
+                        </group>
+
+                        <group string="Bản đồ">
+                            <field name="google_maps_url" readonly="1"/>
+                            <field name="google_maps_iframe" readonly="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Menu riêng cho sản phẩm bất động sản -->
+        <record id="action_house_products" model="ir.actions.act_window">
+            <field name="name">Bất Động Sản</field>
+            <field name="res_model">smileliving.property</field>
+            <field name="domain">[]</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <menuitem id="menu_house_root" name="SmileLiving" sequence="10"/>
+        <menuitem id="menu_house_items" name="Bất Động Sản" action="action_house_products"
+                  parent="menu_house_root" sequence="20"/>
+
+    </data>
+</odoo>

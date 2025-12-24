@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Property Type Tree View -->
+        <record id="view_smileliving_property_type_tree" model="ir.ui.view">
+            <field name="name">smileliving.property.type.list</field>
+            <field name="model">smileliving.type</field>
+            <field name="arch" type="xml">
+                <list string="Loại Bất Động Sản">
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="active"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Property Type Form View -->
+        <record id="view_smileliving_property_type_form" model="ir.ui.view">
+            <field name="name">smileliving.property.type.form</field>
+            <field name="model">smileliving.type</field>
+            <field name="arch" type="xml">
+                <form string="Loại Bất Động Sản">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_properties" type="object" class="oe_stat_button" icon="fa-home">
+                                <field name="property_count" widget="statinfo" string="Bất Động Sản"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name"/></h1>
+                        </div>
+                        <group>
+                            <field name="active"/>
+                        </group>
+                        <notebook>
+                            <page string="Mô Tả">
+                                <field name="description" nolabel="1"/>
+                            </page>
+                            <page string="Tiện Ích">
+                                <field name="amenity_ids" widget="many2many_tags">
+                                    <list>
+                                        <field name="name"/>
+                                        <field name="description"/>
+                                        <field name="icon"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    
+                </form>
+            </field>
+        </record>
+
+        
+
+        <!-- Amenity Tree View -->
+        <record id="view_smileliving_amenity_tree" model="ir.ui.view">
+            <field name="name">smileliving.amenity.list</field>
+            <field name="model">smileliving.amenity</field>
+            <field name="arch" type="xml">
+                <list string="Tiện Ích">
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="icon"/>
+                    <field name="active"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Amenity Form View -->
+        <record id="view_smileliving_amenity_form" model="ir.ui.view">
+            <field name="name">smileliving.amenity.form</field>
+            <field name="model">smileliving.amenity</field>
+            <field name="arch" type="xml">
+                <form string="Tiện Ích">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_property_types" type="object" class="oe_stat_button" icon="fa-list">
+                                <field name="property_type_count" widget="statinfo" string="Loại BĐS"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="icon"/>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                        <group string="Mô Tả">
+                            <field name="description" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Property Type Action -->
+        <record id="action_smileliving_property_type" model="ir.actions.act_window">
+            <field name="name">Loại Bất Động Sản</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">smileliving.type</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="view_smileliving_property_type_tree"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Tạo loại bất động sản đầu tiên!
+                </p>
+                <p>
+                    Định nghĩa các loại bất động sản và tiện ích đi kèm.
+                </p>
+            </field>
+        </record>
+
+        <!-- Amenity Action -->
+        <record id="action_smileliving_amenity" model="ir.actions.act_window">
+            <field name="name">Tiện Ích</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">smileliving.amenity</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="view_smileliving_amenity_tree"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Tạo tiện ích đầu tiên!
+                </p>
+                <p>
+                    Quản lý các tiện ích có sẵn cho bất động sản. hihihihihihihi
+                </p>
+            </field>
+        </record>
+
+        <!-- Configuration Menu -->
+        <menuitem id="menu_smileliving_config" name="Cấu Hình" parent="menu_house_root" sequence="40"/>
+        <menuitem id="menu_smileliving_property_type" name="Loại Bất Động Sản" parent="menu_smileliving_config" 
+                  action="action_smileliving_property_type" sequence="10"/>
+        <menuitem id="menu_smileliving_amenity" name="Tiện Ích" parent="menu_smileliving_config" 
+                  action="action_smileliving_amenity" sequence="20"/>
+        
+        <!-- Tỉnh/Thành Views -->
+        <record id="view_tinhthanh_tree" model="ir.ui.view">
+            <field name="name">tinh.thanh.tree</field>
+            <field name="model">tinh.thanh</field>
+            <field name="arch" type="xml">
+                <list string="Tỉnh/Thành phố">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="active"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_tinhthanh_search" model="ir.ui.view">
+            <field name="name">tinh.thanh.search</field>
+            <field name="model">tinh.thanh</field>
+            <field name="arch" type="xml">
+                <search string="Tìm kiếm Tỉnh/Thành">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <filter string="Đang hoạt động" name="active_true" domain="[('active', '=', True)]"/>
+                    <filter string="Không hoạt động" name="active_false" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter string="Tất cả" name="all" domain="[]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_tinhthanh_form" model="ir.ui.view">
+            <field name="name">tinh.thanh.form</field>
+            <field name="model">tinh.thanh</field>
+            <field name="arch" type="xml">
+                <form string="Tỉnh/Thành phố">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_tinhthanh" model="ir.actions.act_window">
+            <field name="name">Tỉnh/Thành phố</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">tinh.thanh</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Tạo tỉnh/thành đầu tiên!
+                </p>
+                <p>
+                    Quản lý danh sách các tỉnh/thành phố của Việt Nam.
+                </p>
+            </field>
+        </record>
+
+        <!-- Quận/Huyện Views -->
+        <record id="view_quanhuyen_tree" model="ir.ui.view">
+            <field name="name">quan.huyen.tree</field>
+            <field name="model">quan.huyen</field>
+            <field name="arch" type="xml">
+                <list string="Quận/Huyện">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="tinhthanh_id"/>
+                    <field name="active"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_quanhuyen_search" model="ir.ui.view">
+            <field name="name">quan.huyen.search</field>
+            <field name="model">quan.huyen</field>
+            <field name="arch" type="xml">
+                <search string="Tìm kiếm Quận/Huyện">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="tinhthanh_id"/>
+                    <filter string="Đang hoạt động" name="active_true" domain="[('active', '=', True)]"/>
+                    <filter string="Không hoạt động" name="active_false" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter string="Tất cả" name="all" domain="[]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_quanhuyen_form" model="ir.ui.view">
+            <field name="name">quan.huyen.form</field>
+            <field name="model">quan.huyen</field>
+            <field name="arch" type="xml">
+                <form string="Quận/Huyện">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="tinhthanh_id"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_quanhuyen" model="ir.actions.act_window">
+            <field name="name">Quận/Huyện</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">quan.huyen</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Tạo quận/huyện đầu tiên!
+                </p>
+                <p>
+                    Quản lý danh sách các quận/huyện của Việt Nam.
+                </p>
+            </field>
+        </record>
+
+        <!-- Phường/Xã Views -->
+        <record id="view_phuongxa_tree" model="ir.ui.view">
+            <field name="name">phuong.xa.tree</field>
+            <field name="model">phuong.xa</field>
+            <field name="arch" type="xml">
+                <list string="Phường/Xã">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="quanhuyen_id"/>
+                    <field name="active"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_phuongxa_search" model="ir.ui.view">
+            <field name="name">phuong.xa.search</field>
+            <field name="model">phuong.xa</field>
+            <field name="arch" type="xml">
+                <search string="Tìm kiếm Phường/Xã">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="quanhuyen_id"/>
+                    <filter string="Đang hoạt động" name="active_true" domain="[('active', '=', True)]"/>
+                    <filter string="Không hoạt động" name="active_false" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter string="Tất cả" name="all" domain="[]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_phuongxa_form" model="ir.ui.view">
+            <field name="name">phuong.xa.form</field>
+            <field name="model">phuong.xa</field>
+            <field name="arch" type="xml">
+                <form string="Phường/Xã">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="quanhuyen_id"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_phuongxa" model="ir.actions.act_window">
+            <field name="name">Phường/Xã</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">phuong.xa</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Tạo phường/xã đầu tiên!
+                </p>
+                <p>
+                    Quản lý danh sách các phường/xã của Việt Nam.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu items for geographic models -->
+        <menuitem id="menu_smileliving_geographic" name="Địa Lý" parent="menu_smileliving_config" sequence="30"/>
+        <menuitem id="menu_tinhthanh" name="Tỉnh/Thành phố" parent="menu_smileliving_geographic" 
+                  action="action_tinhthanh" sequence="10"/>
+        <menuitem id="menu_quanhuyen" name="Quận/Huyện" parent="menu_smileliving_geographic" 
+                  action="action_quanhuyen" sequence="20"/>
+        <menuitem id="menu_phuongxa" name="Phường/Xã" parent="menu_smileliving_geographic" 
+                  action="action_phuongxa" sequence="30"/>
+    </data>
+</odoo>

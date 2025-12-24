@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sequence for Estate Invoice -->
+    <record id="seq_estate_invoice" model="ir.sequence">
+        <field name="name">Estate Invoice Sequence</field>
+        <field name="code">estate.invoice</field>
+        <field name="prefix">INV/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+    
+    <!-- Sequence for Estate Property Deposit -->
+    <record id="seq_estate_property_deposit" model="ir.sequence">
+        <field name="name">Estate Property Deposit Sequence</field>
+        <field name="code">estate.property.deposit</field>
+        <field name="prefix">DEP/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

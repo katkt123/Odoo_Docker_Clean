@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- One-time job: reset demo catalog and seed Vietnamese real-estate data -->
+    <record id="ir_cron_smileliving_reset_seed_vn_demo" model="ir.cron">
+        <field name="name">SmileLiving: Reset &amp; Seed VN Real Estate Demo</field>
+        <field name="active">True</field>
+        <field name="model_id" ref="smileliving.model_smileliving_property" />
+        <field name="state">code</field>
+        <field name="code">model._cron_reset_and_seed_vn_demo()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
+        <!-- Run ASAP on next scheduler tick -->
+        <field name="nextcall">2000-01-01 00:00:00</field>
+    </record>
+</odoo>

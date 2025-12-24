@@ -1,0 +1,104 @@
+<odoo>
+    <data>
+        <menuitem id="menu_estate_root" name="Estate" sequence="10"/>
+
+        <!-- Menu cha Bất động sản -->
+        <menuitem id="menu_estate_property_parent" name="Bất động sản" parent="menu_estate_root" sequence="10"/>
+
+        <!-- Danh sách BĐS -->
+        <record id="action_estate_property" model="ir.actions.act_window">
+            <field name="name">Danh sách BĐS</field>
+            <field name="res_model">estate.property</field>
+            <field name="view_mode">list,form,kanban</field>
+        </record>
+        <menuitem id="menu_estate_property" name="Danh sách BĐS" 
+                  parent="menu_estate_property_parent" 
+                  action="action_estate_property" 
+                  sequence="10"/>
+
+        <!-- Loại BĐS -->
+        <record id="action_estate_property_type" model="ir.actions.act_window">
+            <field name="name">Loại BĐS</field>
+            <field name="res_model">estate.property.type</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        <menuitem id="menu_estate_property_type" name="Loại BĐS" 
+                  parent="menu_estate_property_parent" 
+                  action="action_estate_property_type" 
+                  sequence="20"/>
+
+        <!-- Thẻ BĐS -->
+        <record id="action_estate_property_tag" model="ir.actions.act_window">
+            <field name="name">Thẻ BĐS</field>
+            <field name="res_model">estate.property.tag</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        <menuitem id="menu_estate_property_tag" name="Thẻ BĐS" 
+                  parent="menu_estate_property_parent" 
+                  action="action_estate_property_tag" 
+                  sequence="30"/>
+
+        <!-- Các menu khác giữ nguyên -->
+        <record id="action_estate_property_offer" model="ir.actions.act_window">
+            <field name="name">Đề nghị giá</field>
+            <field name="res_model">estate.property.offer</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        <menuitem id="menu_estate_property_offer" name="Đề nghị giá" parent="menu_estate_root"
+                  action="action_estate_property_offer" sequence="40"/>
+
+        <record id="action_estate_property_deposit" model="ir.actions.act_window">
+            <field name="name">Phiếu Đặt cọc</field>
+            <field name="res_model">estate.property.deposit</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        <menuitem id="menu_estate_property_deposit" name="Phiếu Đặt cọc" parent="menu_estate_root"
+                  action="action_estate_property_deposit" sequence="50"/>
+
+        <record id="action_estate_invoice" model="ir.actions.act_window">
+            <field name="name">Hóa đơn BĐS</field>
+            <field name="res_model">estate.invoice</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        <menuitem id="menu_estate_invoice" name="Hóa đơn BĐS" parent="menu_estate_root"
+                  action="action_estate_invoice" sequence="60"/>
+
+        <!-- Menu Báo cáo tài chính -->
+        <menuitem id="menu_estate_financial_parent" name="Báo cáo tài chính" parent="menu_estate_root" sequence="70"/>
+        
+        <!-- Actions cho báo cáo tài chính -->
+        <record id="action_estate_financial_report" model="ir.actions.act_window">
+            <field name="name">Báo cáo tài chính</field>
+            <field name="res_model">estate.financial.report</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        
+        <record id="action_estate_revenue" model="ir.actions.act_window">
+            <field name="name">Doanh thu</field>
+            <field name="res_model">estate.revenue</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        
+        <record id="action_estate_expense" model="ir.actions.act_window">
+            <field name="name">Chi phí</field>
+            <field name="res_model">estate.expense</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        
+        <!-- Menu con -->
+        <menuitem id="menu_estate_financial_report" name="Báo cáo tổng hợp" 
+                  parent="menu_estate_financial_parent" 
+                  action="action_estate_financial_report" 
+                  sequence="10"/>
+        
+        <menuitem id="menu_estate_revenue" name="Doanh thu" 
+                  parent="menu_estate_financial_parent" 
+                  action="action_estate_revenue" 
+                  sequence="20"/>
+        
+        <menuitem id="menu_estate_expense" name="Chi phí" 
+                  parent="menu_estate_financial_parent" 
+                  action="action_estate_expense" 
+                  sequence="30"/>
+    </data>
+</odoo>

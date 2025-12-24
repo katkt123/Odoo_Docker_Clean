@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15                # hoặc phiên bản bạn chọn
+    container_name: odoo19-db
+    environment:
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo_pwd
+      - POSTGRES_DB=postgres
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data/pgdata
+    networks:
+      - odoo-net
+    restart: always
+
+  odoo:
+    # Build a custom image so we can install Python dependencies (qifparse)
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: odoo:19.0-custom
+    container_name: odoo19-web
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo_pwd
+      - DB_PORT=5432
+      - DB_NAME=Odoo
+    volumes:
+      - ./addons:/mnt/extra-addons      # thư mục custom modules của bạn
+      - ./odoo_data:/var/lib/odoo       # dữ liệu Odoo
+      - ./config:/etc/odoo              # nếu bạn có file cấu hình riêng
+    networks:
+      - odoo-net
+    restart: always
+
+networks:
+  odoo-net:
+    driver: bridge

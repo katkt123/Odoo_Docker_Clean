@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="smileliving_cta_wrapper_interest" inherit_id="website_sale.cta_wrapper" name="SmileLiving: Replace Add to Cart with Interest">
+            <xpath expr="//div[@id='add_to_cart_wrap']" position="replace">
+                <div id="interest_wrap" class="d-flex flex-grow-1 flex-lg-grow-0 flex-wrap align-items-center gap-2 w-100">
+                    <a
+                        id="interest_button"
+                        role="button"
+                        t-attf-href="/smileliving/interest/{{ product.id }}"
+                        class="btn btn-primary flex-grow-1"
+                    >
+                        Interest
+                    </a>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

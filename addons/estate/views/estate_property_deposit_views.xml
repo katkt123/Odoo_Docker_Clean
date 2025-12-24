@@ -1,0 +1,72 @@
+<odoo>
+    <data>
+        <record id="view_estate_property_deposit_tree" model="ir.ui.view">
+            <field name="name">estate.property.deposit.list</field>
+            <field name="model">estate.property.deposit</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="property_id"/>
+                    <field name="partner_id"/>
+                    <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="installment_type"/>
+                    <field name="monthly_payment" widget="monetary" options="{'currency_field': 'currency_id'}" optional="show"/>
+                    <field name="yearly_payment" widget="monetary" options="{'currency_field': 'currency_id'}" optional="show"/>
+                    <field name="completion_date" optional="show"/>
+                    <field name="date_deposit"/>
+                    <field name="state"/>
+                    <button name="action_confirm" string="Hoàn thành" type="object" icon="fa-check" invisible="state != 'draft'" class="btn-primary"/>
+                    <button name="action_cancel" string="Hủy" type="object" icon="fa-times" invisible="state != 'draft'" class="btn-secondary"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_estate_property_deposit_form" model="ir.ui.view">
+            <field name="name">estate.property.deposit.form</field>
+            <field name="model">estate.property.deposit</field>
+            <field name="arch" type="xml">
+                <form string="Phiếu Đặt cọc">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" readonly="1"/>
+                                <field name="property_id"/>
+                                <field name="partner_id"/>
+                            </group>
+                            <group>
+                                <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="currency_id" readonly="1"/>
+                                <field name="date_deposit"/>
+                                <field name="state" readonly="1"/>
+                            </group>
+                        </group>
+                        
+                        <!-- Kế hoạch Trả góp -->
+                        <group string="Kế hoạch Trả góp">
+                            <group>
+                                <field name="installment_type"/>
+                                <field name="installment_months" invisible="installment_type != 'monthly'" required="installment_type == 'monthly'"/>
+                                <field name="installment_years" invisible="installment_type != 'yearly'" required="installment_type == 'yearly'"/>
+                            </group>
+                            <group>
+                                <field name="monthly_payment" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="installment_type != 'monthly'"/>
+                                <field name="yearly_payment" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="installment_type != 'yearly'"/>
+                                <field name="total_installment_amount" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="installment_type == 'none'"/>
+                                <field name="completion_date" invisible="installment_type == 'none'"/>
+                            </group>
+                        </group>
+                        
+                        <group>
+                            <field name="note" colspan="4"/>
+                        </group>
+                        <footer>
+                            <button name="action_confirm" type="object" string="Hoàn thành" class="btn-primary" invisible="state != 'draft'"/>
+                            <button name="action_cancel" type="object" string="Hủy" class="btn-secondary" invisible="state != 'draft'"/>
+                            <button name="action_create_installment_invoices" type="object" string="Tạo Hóa đơn Trả góp" class="btn-secondary" invisible="installment_type == 'none' or state != 'draft'"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

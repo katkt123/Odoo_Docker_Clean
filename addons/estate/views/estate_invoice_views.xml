@@ -1,0 +1,55 @@
+<odoo>
+    <data>
+        <record id="view_estate_invoice_tree" model="ir.ui.view">
+            <field name="name">estate.invoice.list</field>
+            <field name="model">estate.invoice</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="property_id"/>
+                    <field name="partner_id"/>
+                    <field name="type"/>
+                    <field name="amount_total"/>
+                    <field name="state"/>
+                    <button name="action_post_entry" string="Tạo HĐ KT" type="object" icon="fa-file-text" invisible="state != 'draft'" class="btn-primary"/>
+                    <button name="action_create_liquidation" string="Tạo HĐ Kết toán" type="object" icon="fa-calculator" invisible="state != 'posted' or type == 'liquidation'" class="btn-secondary"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_estate_invoice_form" model="ir.ui.view">
+            <field name="name">estate.invoice.form</field>
+            <field name="model">estate.invoice</field>
+            <field name="arch" type="xml">
+                <form string="Hóa đơn BĐS">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" readonly="1"/>
+                                <field name="property_id"/>
+                                <field name="partner_id"/>
+                            </group>
+                            <group>
+                                <field name="type"/>
+                                <field name="amount_total"/>
+                                <field name="currency_id" readonly="1"/>
+                                <field name="state" readonly="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description"/>
+                            <field name="origin"/>
+                        </group>
+                        <group>
+                            <field name="move_id" readonly="1"/>
+                        </group>
+                        <footer>
+                            <button name="action_post_entry" type="object" string="Tạo Hóa đơn Kế toán" class="btn-primary" invisible="state != 'draft'"/>
+                            <button name="action_create_liquidation" type="object" string="Tạo Hóa đơn Kết toán" class="btn-secondary" invisible="state != 'posted' or type == 'liquidation'"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Báo cáo tài chính -->
+    <record id="view_estate_financial_report_tree" model="ir.ui.view">
+        <field name="name">estate.financial.report.tree</field>
+        <field name="model">estate.financial.report</field>
+        <field name="arch" type="xml">
+            <list string="Báo cáo tài chính">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="period_type"/>
+                <field name="total_revenue" sum="Tổng"/>
+                <field name="total_expense" sum="Tổng"/>
+                <field name="net_profit" sum="Tổng"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_estate_financial_report_form" model="ir.ui.view">
+        <field name="name">estate.financial.report.form</field>
+        <field name="model">estate.financial.report</field>
+        <field name="arch" type="xml">
+            <form string="Báo cáo tài chính">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="date"/>
+                            <field name="period_type"/>
+                        </group>
+                        <group>
+                            <field name="total_revenue"/>
+                            <field name="total_expense"/>
+                            <field name="net_profit"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Doanh thu">
+                            <field name="revenue_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="revenue_type"/>
+                                    <field name="amount"/>
+                                    <field name="customer_id"/>
+                                    <field name="payment_date"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Chi phí">
+                            <field name="expense_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="expense_type"/>
+                                    <field name="amount"/>
+                                    <field name="vendor_id"/>
+                                    <field name="payment_date"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Bất động sản">
+                            <field name="property_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="selling_price"/>
+                                    <field name="total_revenue"/>
+                                    <field name="total_expense"/>
+                                    <field name="net_profit"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_estate_financial_report_search" model="ir.ui.view">
+        <field name="name">estate.financial.report.search</field>
+        <field name="model">estate.financial.report</field>
+        <field name="arch" type="xml">
+            <search string="Báo cáo tài chính">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="period_type"/>
+                <filter string="Hàng ngày" name="daily" domain="[('period_type', '=', 'daily')]"/>
+                <filter string="Hàng tuần" name="weekly" domain="[('period_type', '=', 'weekly')]"/>
+                <filter string="Hàng tháng" name="monthly" domain="[('period_type', '=', 'monthly')]"/>
+                <filter string="Hàng năm" name="yearly" domain="[('period_type', '=', 'yearly')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_estate_financial_report" model="ir.actions.act_window">
+        <field name="name">Báo cáo tài chính</field>
+        <field name="res_model">estate.financial.report</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo báo cáo tài chính đầu tiên
+            </p>
+            <p>
+                Báo cáo tài chính giúp theo dõi doanh thu, chi phí và lợi nhuận từ các hoạt động bất động sản.
+            </p>
+        </field>
+    </record>
+</odoo>

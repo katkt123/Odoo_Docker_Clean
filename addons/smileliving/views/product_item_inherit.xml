@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="product_item_area" inherit_id="website_sale.products_item" name="SmileLiving Product Item Area">
+        <!-- Use pricelist pricing on /shop (matches product detail). On /shop/wishlist, `get_product_prices` may be missing, so fallback to `_get_sales_prices`. -->
+        <xpath expr="//t[@t-set='template_price_vals' and @t-value='get_product_prices(product)']" position="replace">
+            <t t-set="template_price_vals" t-value="product._get_sales_prices(request.website)[product.id] if (request and request.httprequest and '/shop/wishlist' in request.httprequest.path) else get_product_prices(product)"/>
+        </xpath>
+
+        <!-- On /shop/wishlist, ignore any pre-rendered `product_price` snippet to avoid double price rendering -->
+        <xpath expr="//t[@t-if='product_price' and @t-out='product_price']" position="attributes">
+            <attribute name="t-if">product_price and not (request and request.httprequest and '/shop/wishlist' in request.httprequest.path)</attribute>
+        </xpath>
+
+        <!-- Add label before the existing formatted price -->
+        <xpath expr="(//div[contains(concat(' ', normalize-space(@class), ' '), ' product_price ')])[last()]/*[1]" position="before">
+            <span class="fw-bold">Giá:</span>
+            <span class="me-1"/>
+        </xpath>
+
+        <!-- Show area after the (last) price block to avoid odd ordering -->
+        <xpath expr="(//div[contains(concat(' ', normalize-space(@class), ' '), ' product_price ')])[last()]" position="after">
+            <t t-set="sl_prop" t-value="(smileliving_properties_by_template_id or {}).get(product.id)"/>
+            <t t-if="sl_prop and sl_prop.area">
+                <div class="fw-bold mt-1">
+                    Diện tích: <t t-esc="sl_prop.area"/> m²
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

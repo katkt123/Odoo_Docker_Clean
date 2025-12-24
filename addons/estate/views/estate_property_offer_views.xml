@@ -1,0 +1,39 @@
+<odoo>
+    <data>
+        <record id="view_estate_property_offer_tree" model="ir.ui.view">
+            <field name="name">estate.property.offer.list</field>
+            <field name="model">estate.property.offer</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="property_id"/>
+                    <field name="partner_id"/>
+                    <field name="price"/>
+                    <field name="status"/>
+                    <button name="action_accept" string="Chấp nhận" type="object" icon="fa-check" invisible="status != 'pending'" class="btn-primary"/>
+                    <button name="action_refuse" string="Từ chối" type="object" icon="fa-times" invisible="status != 'pending'" class="btn-secondary"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_estate_property_offer_form" model="ir.ui.view">
+            <field name="name">estate.property.offer.form</field>
+            <field name="model">estate.property.offer</field>
+            <field name="arch" type="xml">
+                <form string="Đề nghị giá">
+                    <sheet>
+                        <group>
+                            <field name="property_id"/>
+                            <field name="partner_id"/>
+                            <field name="price"/>
+                            <field name="status"/>
+                        </group>
+                        <footer>
+                            <button name="action_accept" string="Chấp nhận" type="object" class="btn-primary" invisible="status != 'pending'"/>
+                            <button name="action_refuse" string="Từ chối" type="object" class="btn-secondary" invisible="status != 'pending'"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

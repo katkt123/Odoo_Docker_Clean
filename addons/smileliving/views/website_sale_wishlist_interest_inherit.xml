@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template
+            id="smileliving_shop_product_buttons_wishlist_interest"
+            inherit_id="website_sale.shop_product_buttons"
+            name="SmileLiving: Wishlist hide Add to Cart"
+        >
+            <xpath expr="//button[contains(@class, 'o_wsale_product_btn_primary')]" position="replace">
+                <t t-if="not (request and request.httprequest and '/shop/wishlist' in request.httprequest.path)">
+                    <button
+                        type="button"
+                        class="o_wsale_product_btn_primary a-submit btn btn-primary"
+                        aria-label="Add to cart"
+                        title="Add to cart"
+                        t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
+                    >
+                        <i class="fa fa-fw fa-shopping-cart o_not-animable" role="presentation"/>
+                        <span class="o_label small ms-1">Add to Cart</span>
+                    </button>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

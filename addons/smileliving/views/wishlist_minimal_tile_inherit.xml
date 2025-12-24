@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="smileliving_products_item_wishlist_minimal" inherit_id="website_sale.products_item" name="SmileLiving: Wishlist minimal tile">
+        <!-- On /shop/wishlist only: keep image + price + area, hide title/description/rating -->
+        <xpath expr="//div[contains(concat(' ', normalize-space(@class), ' '), ' o_wsale_product_information_text ')]" position="attributes">
+            <attribute name="t-if">not (request and request.httprequest and '/shop/wishlist' in request.httprequest.path)</attribute>
+        </xpath>
+
+        <!-- On /shop/wishlist only: remove the CTA area entirely (no Add to Cart button space) -->
+        <xpath expr="//div[contains(concat(' ', normalize-space(@class), ' '), ' o_wsale_product_btn ')]" position="attributes">
+            <attribute name="t-if">not (request and request.httprequest and '/shop/wishlist' in request.httprequest.path)</attribute>
+        </xpath>
+    </template>
+</odoo>

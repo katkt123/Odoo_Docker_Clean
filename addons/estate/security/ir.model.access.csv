@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_estate_property,access_estate_property,model_estate_property,base.group_user,1,1,1,1
+access_estate_property_type,access_estate_property_type,model_estate_property_type,base.group_user,1,1,1,1
+access_estate_property_tag,access_estate_property_tag,model_estate_property_tag,base.group_user,1,1,1,1
+access_estate_property_offer,access_estate_property_offer,model_estate_property_offer,base.group_user,1,1,1,1
+access_estate_property_deposit,access_estate_property_deposit,model_estate_property_deposit,base.group_user,1,1,1,1
+access_estate_invoice,access_estate_invoice,model_estate_invoice,base.group_user,1,1,1,1
+access_estate_financial_report,access_estate_financial_report,model_estate_financial_report,base.group_user,1,1,1,1
+access_estate_revenue,access_estate_revenue,model_estate_revenue,base.group_user,1,1,1,1
+access_estate_expense,access_estate_expense,model_estate_expense,base.group_user,1,1,1,1
