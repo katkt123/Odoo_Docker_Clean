@@ -31,7 +31,6 @@ services:
       - USER=odoo
       - PASSWORD=odoo_pwd
       - DB_PORT=5432
-      - DB_NAME=Odoo
     volumes:
       - ./addons:/mnt/extra-addons      # thư mục custom modules của bạn
       - ./odoo_data:/var/lib/odoo       # dữ liệu Odoo
