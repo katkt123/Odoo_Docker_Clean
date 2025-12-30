@@ -552,7 +552,7 @@ class SmileLivingProperty(models.Model):
         for rec in self:
             if rec.google_maps_embed_url:
                 rec.google_maps_iframe = (
-                    f"<iframe width=\"100%\" height=\"400\" src=\"{rec.google_maps_embed_url}\" "
+                    f"<iframe width=\"100%\" height=\"600\" src=\"{rec.google_maps_embed_url}\" "
                     f"style=\"border:0;\" allowfullscreen=\"\"></iframe>"
                 )
             else:

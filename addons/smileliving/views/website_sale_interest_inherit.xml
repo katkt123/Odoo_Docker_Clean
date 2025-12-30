@@ -10,9 +10,176 @@
                         t-attf-href="/smileliving/interest/{{ product.id }}"
                         class="btn btn-primary flex-grow-1"
                     >
-                        Interest
+                        Quan tâm
                     </a>
                 </div>
+            </xpath>
+        </template>
+
+        <template id="smileliving_hide_default_wishlist_button" inherit_id="website_sale.product" name="SmileLiving: Hide Default Wishlist Button On Product">
+            <xpath expr="//section[@id='product_detail']" position="inside">
+                <style>
+                    /* Keep only the SmileLiving wishlist button near the title */
+                    #add_to_wishlist { display: none !important; }
+                    #product_details .o_add_wishlist:not(#smileliving_add_to_wishlist_title) { display: none !important; }
+                    #product_details .o_add_wishlist_dyn:not(#smileliving_add_to_wishlist_title) { display: none !important; }
+                    #product_details [data-action="o_wishlist"]:not(#smileliving_add_to_wishlist_title) { display: none !important; }
+                </style>
+            </xpath>
+        </template>
+
+        <template id="smileliving_product_title_wishlist" inherit_id="website_sale.product_title" name="SmileLiving: Wishlist Button Next To Title">
+            <xpath expr="//h1" position="replace">
+                <div class="d-flex align-items-start gap-2">
+                    <h1
+                        t-attf-class="h3 {{'mb-3' if not product.description_ecommerce and not is_view_active('website_sale.product_comment') else ''}}"
+                        t-field="product.name"
+                    >
+                        Product Name
+                    </h1>
+                    <t t-if="product_variant">
+                        <button
+                            id="smileliving_add_to_wishlist_title"
+                            type="button"
+                            class="o_add_wishlist btn btn-outline-primary ms-auto"
+                            t-att-data-product-template-id="product.id"
+                            t-att-data-product-product-id="product_variant.id"
+                            data-action="o_wishlist"
+                            aria-label="Wishlist"
+                            title="Wishlist"
+                        >
+                            <i class="fa fa-heart-o" role="presentation"/>
+                        </button>
+                    </t>
+                </div>
+            </xpath>
+        </template>
+
+        <template id="smileliving_remove_product_terms" inherit_id="website_sale.product_terms_and_conditions" name="SmileLiving: Remove Product Terms &amp; Conditions">
+            <xpath expr="." position="replace">
+                <t/>
+            </xpath>
+        </template>
+
+        <template id="smileliving_shop_title" inherit_id="website_sale.products" name="SmileLiving: Shop Title">
+            <xpath expr="//h1[contains(@class, 'o_wsale_shop_title')]" position="replace">
+                <h1 class="o_wsale_shop_title h4-fs" t-if="not category and not search">
+                    Bất động sản
+                </h1>
+            </xpath>
+        </template>
+
+        <template id="smileliving_all_products_link_name" inherit_id="website_sale.all_products_link_name" name="SmileLiving: All Products Breadcrumb Label">
+            <xpath expr="//span" position="replace">
+                <span placeholder="Bất động sản">Bất động sản</span>
+            </xpath>
+        </template>
+
+        <template id="smileliving_product_detail_sidebar" inherit_id="website_sale.product" name="SmileLiving: Property Info In Right Column">
+            <xpath expr="//div[@id='o_wsale_product_details_content']//div[contains(@class, 'o_wsale_product_details_content_section_cta')]" position="after">
+                <t t-set="smile_property" t-value="request.env['smileliving.property'].sudo().search([('product_tmpl_id', '=', product.id)], limit=1)"/>
+                <t t-if="smile_property">
+                    <div class="o_wsale_product_details_content_section mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Thông tin bất động sản</h5>
+
+                                <t t-set="status_label" t-value="dict(smile_property._fields['house_status'].selection).get(smile_property.house_status) or ''"/>
+                                <t t-set="sale_label" t-value="dict(smile_property._fields['type_sale'].selection).get(smile_property.type_sale) or ''"/>
+
+                                <div class="list-group list-group-flush">
+                                    <t t-if="status_label">
+                                        <div class="list-group-item px-0">
+                                            <div class="d-flex justify-content-between gap-3">
+                                                <span class="text-muted">Tình trạng</span>
+                                                <span class="fw-semibold" t-esc="status_label"/>
+                                            </div>
+                                        </div>
+                                    </t>
+
+                                    <t t-if="smile_property.type_id">
+                                        <div class="list-group-item px-0">
+                                            <div class="d-flex justify-content-between gap-3">
+                                                <span class="text-muted">Danh mục</span>
+                                                <span class="fw-semibold" t-esc="smile_property.type_id.name"/>
+                                            </div>
+                                        </div>
+                                    </t>
+
+                                    <div class="list-group-item px-0">
+                                        <div class="d-flex justify-content-between gap-3">
+                                            <span class="text-muted">Diện tích</span>
+                                            <span class="fw-semibold">
+                                                <span t-esc="smile_property.area"/>
+                                                <span> m²</span>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <t t-if="sale_label">
+                                        <div class="list-group-item px-0">
+                                            <div class="d-flex justify-content-between gap-3">
+                                                <span class="text-muted">Loại</span>
+                                                <span class="fw-semibold" t-esc="sale_label"/>
+                                            </div>
+                                        </div>
+                                    </t>
+
+                                    <t t-if="smile_property.address">
+                                        <div class="list-group-item px-0">
+                                            <div class="text-muted mb-1">Địa chỉ</div>
+                                            <div class="fw-semibold" t-esc="smile_property.address"/>
+                                        </div>
+                                    </t>
+                                </div>
+
+                                <t t-if="smile_property.amenity_ids">
+                                    <div class="mt-3">
+                                        <div class="text-muted mb-2">Tiện ích</div>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            <t t-foreach="smile_property.amenity_ids" t-as="amenity">
+                                                <span class="badge rounded-pill text-bg-light" t-esc="amenity.name"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </xpath>
+        </template>
+
+        <template id="smileliving_product_detail_sections" inherit_id="website_sale.product" name="SmileLiving: Property Full Width Sections">
+            <xpath expr="//div[@id='product_detail_main']" position="after">
+                <t t-set="smile_property" t-value="request.env['smileliving.property'].sudo().search([('product_tmpl_id', '=', product.id)], limit=1)"/>
+                <t t-if="smile_property">
+                    <div class="w-100">
+                        <!-- Section: Thông tin chi tiết (full width) -->
+                        <t t-if="smile_property.description_detail">
+                            <section class="py-4">
+                                <div class="container">
+                                    <h3 class="mb-3">Thông tin chi tiết</h3>
+                                    <div class="text-body" style="white-space: pre-wrap;">
+                                        <t t-esc="smile_property.description_detail"/>
+                                    </div>
+                                </div>
+                            </section>
+                        </t>
+
+                        <!-- Section: Bản đồ (full width) -->
+                        <t t-if="smile_property.google_maps_iframe">
+                            <section class="py-4">
+                                <div class="container">
+                                    <h3 class="mb-3">Bản đồ</h3>
+                                </div>
+                                <div class="container-fluid px-0">
+                                    <div t-field="smile_property.google_maps_iframe"/>
+                                </div>
+                            </section>
+                        </t>
+                    </div>
+                </t>
             </xpath>
         </template>
     </data>
