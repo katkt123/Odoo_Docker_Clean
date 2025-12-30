@@ -216,6 +216,9 @@ class SmileLivingController(http.Controller):
                 'source_id': source_id,
                 'team_id': team_id,
                 'company_id': website_company.id,
+                'expected_revenue': product_tmpl.list_price,
+                'smile_product_tmpl_id': product_tmpl.id,
+                'smile_property_id': prop.id,
             }
             
             # Thêm priority với fallback
@@ -269,6 +272,11 @@ class SmileLivingController(http.Controller):
             product = request.env['product.product'].sudo().browse(int(product_id))
             if not product.exists():
                 return {'success': False, 'error': 'Product not found'}
+
+            product_tmpl = product.product_tmpl_id
+            prop = request.env['smileliving.property'].sudo().search([
+                ('product_tmpl_id', '=', product_tmpl.id),
+            ], limit=1)
             team_id = False
             try:
                 team_id = request.env['crm.team'].sudo().with_company(website_company).search([
@@ -282,6 +290,9 @@ class SmileLivingController(http.Controller):
                 'description': f"Sản phẩm wishlist: {product.display_name} (id: {product.id})",
                 'team_id': team_id,
                 'company_id': website_company.id,
+                'expected_revenue': product_tmpl.list_price,
+                'smile_product_tmpl_id': product_tmpl.id,
+                'smile_property_id': prop.id if prop else False,
             })
             return {'success': True, 'lead_id': lead.id}
         except Exception as e:

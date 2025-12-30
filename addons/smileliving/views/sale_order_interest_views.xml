@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="smileliving_sale_order_view_form_inherit_interest" model="ir.ui.view">
+            <field name="name">smileliving.sale.order.form.interest</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="website_sale.sale_order_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='opportunity_id']" position="after">
+                    <group string="Bất động sản quan tâm" col="4">
+                        <field name="smile_product_image_128" widget="image" class="oe_avatar" options="{'preview_image': 'smile_product_image_128'}"/>
+                        <field name="smile_product_tmpl_id"/>
+                        <field name="smile_product_tmpl_dbid"/>
+                        <field name="smile_property_id"/>
+                        <field name="smile_property_dbid"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

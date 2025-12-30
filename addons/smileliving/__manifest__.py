@@ -15,6 +15,8 @@
         'views/house_property_views.xml',
         'views/invoice_property_views.xml',
         'views/property_type_views.xml',
+        'views/crm_lead_interest_views.xml',
+        'views/sale_order_interest_views.xml',
         'views/website_sale_interest_inherit.xml',
         'views/website_sale_wishlist_interest_inherit.xml',
         'views/smileliving_template_views.xml',
