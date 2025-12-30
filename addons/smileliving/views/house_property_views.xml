@@ -9,6 +9,7 @@
             <field name="arch" type="xml">
                 <list string="Bất Động Sản">
                     <field name="product_tmpl_id"/>
+                    <field name="price_vnd" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     <field name="type_id"/>
                     <field name="type_sale"/>
                     <field name="area"/>
@@ -44,6 +45,7 @@
 
                         <group>
                             <field name="product_tmpl_id"/>
+                            <field name="price_vnd" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="type_id"/>
                             <field name="type_sale"/>
                             <field name="area"/>

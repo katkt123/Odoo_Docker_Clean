@@ -3,7 +3,7 @@ version: '3.8'
 services:
   db:
     image: postgres:15                # hoặc phiên bản bạn chọn
-    container_name: odoo19-db
+    container_name: odoo19-db-clean
     environment:
       - POSTGRES_USER=odoo
       - POSTGRES_PASSWORD=odoo_pwd
@@ -21,7 +21,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: odoo:19.0-custom
-    container_name: odoo19-web
+    container_name: odoo19-web-clean
     depends_on:
       - db
     ports:

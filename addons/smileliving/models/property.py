@@ -41,6 +41,22 @@ class SmileLivingProperty(models.Model):
         readonly=True,
     )
 
+    currency_id = fields.Many2one(
+        'res.currency',
+        string='Tiền tệ',
+        related='company_id.currency_id',
+        store=True,
+        readonly=True,
+    )
+
+    price_vnd = fields.Float(
+        string='Giá (VND)',
+        related='product_tmpl_id.list_price',
+        readonly=False,
+        tracking=True,
+        digits='Product Price',
+    )
+
     type_id = fields.Many2one(
         'smileliving.type',
         string='Danh Mục Bất Động Sản',
@@ -117,6 +133,62 @@ class SmileLivingProperty(models.Model):
             ], limit=1)
             if dup:
                 raise ValidationError('Mỗi product.template chỉ được gắn với 1 smileliving.property.')
+
+    # -------------------------------------------------------------------------
+    # Company (VNCompany) enforcement
+    # -------------------------------------------------------------------------
+
+    @api.model
+    def _get_vn_company(self):
+        """Best-effort lookup for the VN company.
+
+        We prefer exact names first, then fall back to a company using VND.
+        """
+        Company = self.env['res.company'].sudo()
+
+        for name in ('VNCompany', 'VN Company', 'VNCOMPANY'):
+            company = Company.search([('name', '=', name)], limit=1)
+            if company:
+                return company
+
+        vnd = self.env['res.currency'].sudo().search([('name', '=', 'VND')], limit=1)
+        if vnd:
+            company = Company.search([('currency_id', '=', vnd.id), ('name', 'ilike', '%VN%')], limit=1)
+            if company:
+                return company
+            company = Company.search([('currency_id', '=', vnd.id)], limit=1)
+            if company:
+                return company
+
+        # Fall back to the current company.
+        return self.env.company
+
+    def _ensure_templates_in_vn_company(self, templates):
+        vn_company = self._get_vn_company()
+        templates = (templates or self.env['product.template']).sudo()
+        for tmpl in templates:
+            # Only auto-fix templates that are "Visible to all" (company_id=False).
+            # If a template already belongs to another company, we leave it unchanged.
+            if not tmpl.company_id:
+                tmpl.write({'company_id': vn_company.id})
+        return vn_company
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        records._ensure_templates_in_vn_company(records.mapped('product_tmpl_id'))
+        return records
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'product_tmpl_id' in vals:
+            self._ensure_templates_in_vn_company(self.mapped('product_tmpl_id'))
+        return res
+
+    @api.onchange('product_tmpl_id')
+    def _onchange_product_tmpl_id_set_company(self):
+        if self.product_tmpl_id:
+            self._ensure_templates_in_vn_company(self.product_tmpl_id)
 
     # -------------------------------------------------------------------------
     # Demo reset & seed (VN Real Estate) - for test projects
