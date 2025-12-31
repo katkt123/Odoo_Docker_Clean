@@ -375,18 +375,44 @@ class SmileLivingShop(WebsiteSale):
         if isinstance(type_sale, list):
             type_sale = type_sale[0] if type_sale else ''
 
-        # Available min/max area for slider (global across real-estate)
+        # Available min/max area for slider.
+        # Prefer computing from the currently displayed products to avoid mismatches
+        # when website/company context and property ownership diverge.
         website_company = self._website_company()
-        area_stats = request.env['smileliving.property'].sudo().read_group(
-            [('company_id', 'in', [website_company.id, False]), ('area', '!=', False)],
-            ['area:min', 'area:max'],
-            []
-        )
-        available_min_area = 0.0
-        available_max_area = 0.0
-        if area_stats:
-            available_min_area = float(area_stats[0].get('area_min') or 0.0)
-            available_max_area = float(area_stats[0].get('area_max') or available_min_area or 0.0)
+
+        Property = request.env['smileliving.property'].sudo()
+        products = response.qcontext.get('products')
+
+        # NOTE: Odoo's read_group aggregates can be tricky to parse (keys may not be
+        # `area_min/area_max` as expected). Use ordered searches for reliability.
+        area_domain = [('area', '>', 0)]
+        if products and getattr(products, 'ids', None):
+            area_domain.append(('product_tmpl_id', 'in', products.ids))
+        else:
+            area_domain.append(('company_id', 'in', [website_company.id, False]))
+
+        min_prop = Property.search(area_domain, order='area asc', limit=1)
+        max_prop = Property.search(area_domain, order='area desc', limit=1)
+
+        available_min_area = float(min_prop.area) if min_prop else 0.0
+        available_max_area = float(max_prop.area) if max_prop else 0.0
+
+        # User preference: always start the slider at 1 m².
+        available_min_area = 1.0
+
+        # Debug helpers (temporary; used to diagnose range issues on live pages)
+        response.qcontext['smile_debug_db'] = request.db
+        response.qcontext['smile_debug_website_id'] = request.website.id if request.website else False
+        response.qcontext['smile_debug_website_company_id'] = website_company.id if website_company else False
+        response.qcontext['smile_debug_products_ids'] = products.ids if products and getattr(products, 'ids', None) else []
+        response.qcontext['smile_debug_area_domain'] = area_domain
+        response.qcontext['smile_debug_area_min'] = available_min_area
+        response.qcontext['smile_debug_area_max'] = available_max_area
+
+        # Avoid a degenerate range (min == max) which makes the range slider not draggable.
+        # This typically happens when there is no valid `area` data yet.
+        if available_max_area <= available_min_area:
+            available_max_area = available_min_area + 1.0
 
         def _safe_float(val):
             try:
@@ -400,6 +426,12 @@ class SmileLivingShop(WebsiteSale):
             current_area_min = available_min_area
         if current_area_max is None:
             current_area_max = available_max_area
+
+        # Clamp current values into the available range.
+        current_area_min = max(available_min_area, min(current_area_min, available_max_area))
+        current_area_max = max(available_min_area, min(current_area_max, available_max_area))
+        if current_area_max < current_area_min:
+            current_area_min, current_area_max = current_area_max, current_area_min
         
         # Lấy danh sách property types để hiển thị trong filter
         property_types = request.env['smileliving.type'].sudo().search([

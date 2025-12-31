@@ -8,7 +8,10 @@ class SmileLivingProperty(models.Model):
     _name = 'smileliving.property'
     _description = 'Bất Động Sản'
     _inherit = ['mail.thread', 'mail.activity.mixin']
+    _rec_name = 'name'
     _order = 'create_date desc, id desc'
+
+    name = fields.Char(string='Tên', compute='_compute_name', store=True, index=True)
 
     product_tmpl_id = fields.Many2one(
         'product.template',
@@ -121,6 +124,30 @@ class SmileLivingProperty(models.Model):
         store=True,
         sanitize=False,
     )
+
+    @api.depends(
+        'product_tmpl_id',
+        'product_tmpl_id.name',
+        'tinhthanh_id',
+        'tinhthanh_id.name',
+        'quanhuyen_id',
+        'quanhuyen_id.name',
+        'phuongxa_id',
+        'phuongxa_id.name',
+    )
+    def _compute_name(self):
+        for rec in self:
+            base = rec.product_tmpl_id.name or 'Bất động sản'
+            parts = [
+                rec.phuongxa_id.name if rec.phuongxa_id else False,
+                rec.quanhuyen_id.name if rec.quanhuyen_id else False,
+                rec.tinhthanh_id.name if rec.tinhthanh_id else False,
+            ]
+            location = ', '.join([p for p in parts if p])
+            rec.name = f"{base} - {location}" if location else base
+
+    def name_get(self):
+        return [(rec.id, rec.name or 'Bất động sản') for rec in self]
 
     @api.constrains('product_tmpl_id')
     def _check_unique_product_tmpl(self):

@@ -493,11 +493,37 @@
                     </div>
                     <div id="smileliving_area_filter" class="accordion-collapse collapse show">
                         <div id="smileliving_area_range_option" class="position-relative">
+                                                        <!-- DEBUG (SmileLiving area range)
+                                                                 db=<t t-esc="smile_debug_db"/>
+                                                                 website_id=<t t-esc="website.id if website else ''"/>
+                                                                 website_company_id=<t t-esc="website.company_id.id if website and website.company_id else ''"/>
+                                                                 products_count=<t t-esc="len(products) if products else 0"/>
+                                                                 products_ids=<t t-esc="smile_debug_products_ids"/>
+                                                                 area_domain=<t t-esc="smile_debug_area_domain"/>
+                                                                 computed_min=<t t-esc="smile_debug_area_min"/>
+                                                                 computed_max=<t t-esc="smile_debug_area_max"/>
+                                                                 available_min_area=<t t-esc="available_min_area"/>
+                                                                 available_max_area=<t t-esc="available_max_area"/>
+                                                                 current_min=<t t-esc="filter_area_min"/>
+                                                                 current_max=<t t-esc="filter_area_max"/>
+                                                        -->
                             <input
                                 type="range"
                                 multiple="multiple"
                                 class="form-range range-with-input"
                                 t-att-data-url="keep(filter_area_min=0, filter_area_max=0)"
+                                t-att-data-debug-website-id="website.id if website else ''"
+                                t-att-data-debug-website-company-id="website.company_id.id if website and website.company_id else ''"
+                                t-att-data-debug-products-count="len(products) if products else 0"
+                                t-att-data-debug-products-ids="smile_debug_products_ids"
+                                t-att-data-debug-db="smile_debug_db"
+                                                                t-att-data-debug-area-domain="smile_debug_area_domain"
+                                                                t-att-data-debug-area-min="smile_debug_area_min"
+                                                                t-att-data-debug-area-max="smile_debug_area_max"
+                                t-att-data-debug-available-min="available_min_area"
+                                t-att-data-debug-available-max="available_max_area"
+                                t-att-data-debug-current-min="filter_area_min"
+                                t-att-data-debug-current-max="filter_area_max"
                                 t-att-step="1"
                                 t-att-min="'%f' % (available_min_area)"
                                 t-att-max="'%f' % (available_max_area)"
