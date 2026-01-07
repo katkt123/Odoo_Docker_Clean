@@ -1,6 +1,6 @@
 import urllib.parse
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -52,12 +52,270 @@ class SmileLivingProperty(models.Model):
         readonly=True,
     )
 
+    # -------------------------------------------------------------------------
+    # Accounting (real invoices in account.move)
+    # -------------------------------------------------------------------------
+
+    sale_order_ids = fields.Many2many(
+        'sale.order',
+        string='Hợp đồng (Sale Orders)',
+        compute='_compute_sale_accounting_links',
+        compute_sudo=True,
+    )
+    sale_order_count = fields.Integer(
+        string='Số hợp đồng',
+        compute='_compute_sale_accounting_links',
+        compute_sudo=True,
+    )
+
+    deposit_move_ids = fields.Many2many(
+        'account.move',
+        string='Hóa đơn đặt cọc',
+        compute='_compute_sale_accounting_links',
+        compute_sudo=True,
+    )
+    deposit_move_count = fields.Integer(
+        string='Số hóa đơn cọc',
+        compute='_compute_sale_accounting_links',
+        compute_sudo=True,
+    )
+    deposit_invoiced_total = fields.Monetary(
+        string='Tổng cọc đã xuất',
+        compute='_compute_sale_accounting_links',
+        compute_sudo=True,
+        currency_field='currency_id',
+    )
+    deposit_due_total = fields.Monetary(
+        string='Cọc còn phải thu',
+        compute='_compute_sale_accounting_links',
+        compute_sudo=True,
+        currency_field='currency_id',
+    )
+
+    final_move_ids = fields.Many2many(
+        'account.move',
+        string='Hóa đơn bán (final)',
+        compute='_compute_sale_accounting_links',
+        compute_sudo=True,
+    )
+    final_move_count = fields.Integer(
+        string='Số hóa đơn bán',
+        compute='_compute_sale_accounting_links',
+        compute_sudo=True,
+    )
+
+    accounting_state = fields.Selection(
+        [
+            ('no_contract', 'Chưa có hợp đồng'),
+            ('contract', 'Có hợp đồng'),
+            ('deposit_invoiced', 'Đã xuất hóa đơn cọc'),
+            ('deposit_paid', 'Đã thu cọc'),
+            ('final_invoiced', 'Đã xuất hóa đơn bán'),
+            ('paid', 'Đã thu đủ'),
+        ],
+        string='Trạng thái kế toán',
+        compute='_compute_sale_accounting_links',
+        compute_sudo=True,
+        store=False,
+    )
+
+    account_move_ids = fields.Many2many(
+        'account.move',
+        string='Hóa đơn (Odoo)',
+        compute='_compute_account_moves',
+        compute_sudo=True,
+    )
+    account_move_count = fields.Integer(
+        string='Số hóa đơn (Odoo)',
+        compute='_compute_account_moves',
+        compute_sudo=True,
+    )
+    account_invoiced_total = fields.Monetary(
+        string='Tổng tiền hóa đơn',
+        compute='_compute_account_moves',
+        compute_sudo=True,
+        currency_field='currency_id',
+    )
+    account_due_total = fields.Monetary(
+        string='Còn phải thu',
+        compute='_compute_account_moves',
+        compute_sudo=True,
+        currency_field='currency_id',
+    )
+
     price_vnd = fields.Float(
         string='Giá (VND)',
         related='product_tmpl_id.list_price',
         readonly=False,
         tracking=True,
         digits='Product Price',
+    )
+
+    def _get_related_invoice_domain(self):
+        self.ensure_one()
+        if not self.product_tmpl_id:
+            return [('id', '=', 0)]
+        return [
+            ('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt')),
+            ('state', '!=', 'cancel'),
+            ('invoice_line_ids.product_id.product_tmpl_id', '=', self.product_tmpl_id.id),
+        ]
+
+    def _get_related_sale_order_domain(self):
+        self.ensure_one()
+        if not self.product_tmpl_id:
+            return [('id', '=', 0)]
+        return [
+            ('order_id.state', '!=', 'cancel'),
+            ('product_id.product_tmpl_id', '=', self.product_tmpl_id.id),
+        ]
+
+    def _is_invoice_from_downpayment(self, move):
+        """Heuristic to detect down payment invoices.
+
+        In standard Odoo, down payment invoice lines are linked to sale.order.line
+        records with `is_downpayment=True`.
+        """
+        self.ensure_one()
+        for inv_line in move.invoice_line_ids:
+            sale_lines = inv_line.sale_line_ids
+            if any(getattr(sl, 'is_downpayment', False) for sl in sale_lines):
+                return True
+        return False
+
+    def _is_invoice_for_property_product(self, move):
+        self.ensure_one()
+        if not self.product_tmpl_id:
+            return False
+        for inv_line in move.invoice_line_ids:
+            for sl in inv_line.sale_line_ids:
+                if getattr(sl, 'is_downpayment', False):
+                    continue
+                if sl.product_id and sl.product_id.product_tmpl_id.id == self.product_tmpl_id.id:
+                    return True
+        # Fallback: allow invoices created manually (not from SO) to still show
+        # up in the generic invoices smart button.
+        return False
+
+    @api.depends('product_tmpl_id')
+    def _compute_sale_accounting_links(self):
+        SaleLine = self.env['sale.order.line']
+        Move = self.env['account.move']
+
+        for rec in self:
+            sale_orders = self.env['sale.order']
+            deposit_moves = Move.browse()
+            final_moves = Move.browse()
+
+            if rec.product_tmpl_id:
+                lines = SaleLine.search(rec._get_related_sale_order_domain())
+                sale_orders = lines.mapped('order_id')
+
+                if sale_orders:
+                    candidate_moves = Move.search([
+                        ('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt')),
+                        ('state', '!=', 'cancel'),
+                        ('invoice_line_ids.sale_line_ids.order_id', 'in', sale_orders.ids),
+                    ])
+
+                    deposit_moves = candidate_moves.filtered(lambda m: rec._is_invoice_from_downpayment(m))
+                    final_moves = candidate_moves.filtered(lambda m: rec._is_invoice_for_property_product(m))
+
+            rec.sale_order_ids = sale_orders
+            rec.sale_order_count = len(sale_orders)
+
+            rec.deposit_move_ids = deposit_moves
+            rec.deposit_move_count = len(deposit_moves)
+            rec.deposit_invoiced_total = sum(deposit_moves.mapped('amount_total'))
+            rec.deposit_due_total = sum(deposit_moves.mapped('amount_residual'))
+
+            rec.final_move_ids = final_moves
+            rec.final_move_count = len(final_moves)
+
+            # Status
+            state = 'no_contract'
+            if sale_orders:
+                state = 'contract'
+
+            posted_deposits = deposit_moves.filtered(lambda m: m.state == 'posted')
+            posted_finals = final_moves.filtered(lambda m: m.state == 'posted')
+
+            if posted_deposits:
+                state = 'deposit_invoiced'
+                if all(m.amount_residual == 0 for m in posted_deposits):
+                    state = 'deposit_paid'
+
+            if posted_finals:
+                state = 'final_invoiced'
+                if all(m.amount_residual == 0 for m in posted_finals) and (
+                    not posted_deposits or all(m.amount_residual == 0 for m in posted_deposits)
+                ):
+                    state = 'paid'
+
+            rec.accounting_state = state
+
+    @api.depends('product_tmpl_id')
+    def _compute_account_moves(self):
+        Move = self.env['account.move']
+        for rec in self:
+            moves = Move.search(rec._get_related_invoice_domain()) if rec.product_tmpl_id else Move.browse()
+            rec.account_move_ids = moves
+            rec.account_move_count = len(moves)
+            rec.account_invoiced_total = sum(moves.mapped('amount_total'))
+            rec.account_due_total = sum(moves.mapped('amount_residual'))
+
+    def action_view_customer_invoices(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Customer Invoices'),
+            'res_model': 'account.move',
+            'view_mode': 'list,form',
+            'domain': self._get_related_invoice_domain(),
+            'context': {
+                'default_move_type': 'out_invoice',
+            },
+        }
+
+    def action_view_sale_orders(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Sale Orders'),
+            'res_model': 'sale.order',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', self.sale_order_ids.ids)],
+            'context': {},
+        }
+
+    def action_view_deposit_invoices(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Deposit Invoices'),
+            'res_model': 'account.move',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', self.deposit_move_ids.ids)],
+            'context': {'default_move_type': 'out_invoice'},
+        }
+
+    def action_view_final_invoices(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Final Invoices'),
+            'res_model': 'account.move',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', self.final_move_ids.ids)],
+            'context': {'default_move_type': 'out_invoice'},
+        }
+
+    is_publish = fields.Boolean(
+        string='Đăng website',
+        compute='_compute_is_publish',
+        inverse='_inverse_is_publish',
+        readonly=False,
+        tracking=True,
     )
 
     type_id = fields.Many2one(
@@ -138,6 +396,7 @@ class SmileLivingProperty(models.Model):
     def _compute_name(self):
         for rec in self:
             base = rec.product_tmpl_id.name or 'Bất động sản'
+
             parts = [
                 rec.phuongxa_id.name if rec.phuongxa_id else False,
                 rec.quanhuyen_id.name if rec.quanhuyen_id else False,
@@ -145,6 +404,31 @@ class SmileLivingProperty(models.Model):
             ]
             location = ', '.join([p for p in parts if p])
             rec.name = f"{base} - {location}" if location else base
+
+    def _get_product_template_publish_field_name(self):
+        ProductTmpl = self.env['product.template']
+        if 'is_published' in ProductTmpl._fields:
+            return 'is_published'
+        if 'website_published' in ProductTmpl._fields:
+            return 'website_published'
+        return None
+
+    def _compute_is_publish(self):
+        publish_field = self._get_product_template_publish_field_name()
+        for rec in self:
+            tmpl = rec.product_tmpl_id
+            if not tmpl or not publish_field:
+                rec.is_publish = False
+                continue
+            rec.is_publish = bool(tmpl[publish_field])
+
+    def _inverse_is_publish(self):
+        publish_field = self._get_product_template_publish_field_name()
+        if not publish_field:
+            return
+        for rec in self:
+            if rec.product_tmpl_id:
+                rec.product_tmpl_id.write({publish_field: bool(rec.is_publish)})
 
     def name_get(self):
         return [(rec.id, rec.name or 'Bất động sản') for rec in self]

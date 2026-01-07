@@ -114,3 +114,25 @@ class SaleOrder(models.Model):
                 order.write({'order_line': [Command.create(vals)]})
 
         return orders
+
+    def action_confirm(self):
+        res = super().action_confirm()
+
+        # Business rule: once the contract is confirmed, the property should no
+        # longer be visible on the website.
+        self._smileliving_on_contract_confirm()
+
+        return res
+
+    def _smileliving_on_contract_confirm(self):
+        Property = self.env['smileliving.property'].sudo()
+        templates = self.mapped('order_line.product_id.product_tmpl_id').filtered(lambda t: t)
+        if not templates:
+            return
+
+        props = Property.search([('product_tmpl_id', 'in', templates.ids)])
+        for prop in props:
+            vals = {'is_publish': False}
+            if prop.house_status == 'available':
+                vals['house_status'] = 'reserved'
+            prop.write(vals)

@@ -6,7 +6,7 @@
             <field name="name">smileliving.invoice.list</field>
             <field name="model">smileliving.invoice</field>
             <field name="arch" type="xml">
-                <list string="Hóa Đơn Bất Động Sản" decoration-success="state=='paid'" decoration-danger="state=='cancelled'">
+                <list string="Hóa Đơn Bất Động Sản" decoration-success="state=='paid'" decoration-danger="state=='cancel'">
                     <field name="property_id"/>
                     <field name="partner_id"/>
                     <field name="amount" widget="monetary"/>
@@ -68,7 +68,7 @@
         </record>
 
         <!-- Invoice Property Menu -->
-        <menuitem id="menu_smileliving_invoice_property" name="Hóa Đơn" parent="menu_house_root" 
-                  action="action_smileliving_invoice_property" sequence="30"/>
+        <menuitem id="menu_smileliving_invoice_property" name="Hóa Đơn (Cũ)" parent="menu_house_root"
+                  action="action_smileliving_invoice_property" sequence="30" groups="base.group_no_one"/>
     </data>
 </odoo>

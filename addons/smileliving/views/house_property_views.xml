@@ -9,6 +9,7 @@
             <field name="arch" type="xml">
                 <list string="Bất Động Sản">
                     <field name="product_tmpl_id"/>
+                    <field name="is_publish" widget="boolean_toggle"/>
                     <field name="price_vnd" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     <field name="type_id"/>
                     <field name="type_sale"/>
@@ -28,6 +29,21 @@
             <field name="arch" type="xml">
                 <form string="Bất Động Sản">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_customer_invoices" type="object" class="oe_stat_button">
+                                <field name="account_move_count" widget="statinfo" string="Hóa đơn"/>
+                            </button>
+                            <button name="action_view_sale_orders" type="object" class="oe_stat_button" invisible="sale_order_count == 0">
+                                <field name="sale_order_count" widget="statinfo" string="Hợp đồng"/>
+                            </button>
+                            <button name="action_view_deposit_invoices" type="object" class="oe_stat_button" invisible="deposit_move_count == 0">
+                                <field name="deposit_move_count" widget="statinfo" string="Cọc"/>
+                            </button>
+                            <button name="action_view_final_invoices" type="object" class="oe_stat_button" invisible="final_move_count == 0">
+                                <field name="final_move_count" widget="statinfo" string="HĐ bán"/>
+                            </button>
+                        </div>
+
                         <group string="Hình ảnh">
                             <field name="product_image_1920" widget="image" class="oe_avatar"/>
                             <field
@@ -45,7 +61,13 @@
 
                         <group>
                             <field name="product_tmpl_id"/>
+                            <field name="is_publish" widget="boolean_toggle"/>
                             <field name="price_vnd" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="account_invoiced_total" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
+                            <field name="account_due_total" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
+                            <field name="deposit_invoiced_total" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
+                            <field name="deposit_due_total" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
+                            <field name="accounting_state" readonly="1"/>
                             <field name="type_id"/>
                             <field name="type_sale"/>
                             <field name="area"/>

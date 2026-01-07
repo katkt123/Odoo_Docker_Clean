@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Reporting root -->
+        <menuitem id="menu_smileliving_reporting_root"
+                  name="Báo cáo tài chính"
+                  parent="menu_house_root"
+                  sequence="30"/>
+
+        <!-- 1) SmileLiving Invoices -->
+        <record id="action_smileliving_customer_invoices" model="ir.actions.act_window">
+            <field name="name">Hóa đơn (SmileLiving)</field>
+            <field name="res_model">account.move</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[("smileliving_is_smileliving","=",True),("move_type","in",["out_invoice","out_refund"])]</field>
+            <field name="context">{"search_default_posted": 1}</field>
+        </record>
+
+        <menuitem id="menu_smileliving_reporting_invoices"
+                  name="Hóa đơn"
+                  parent="menu_smileliving_reporting_root"
+                  action="action_smileliving_customer_invoices"
+                  sequence="10"/>
+
+        <!-- 2) SmileLiving Journal Items -->
+        <record id="action_smileliving_journal_items" model="ir.actions.act_window">
+            <field name="name">Bút toán (SmileLiving)</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_mode">list,pivot,graph,form</field>
+            <field name="domain">[("smileliving_is_smileliving","=",True)]</field>
+            <field name="context">{"search_default_posted": 1}</field>
+        </record>
+
+        <menuitem id="menu_smileliving_reporting_journal_items"
+                  name="Bút toán"
+                  parent="menu_smileliving_reporting_root"
+                  action="action_smileliving_journal_items"
+                  sequence="20"/>
+
+        <!-- 3) SmileLiving Revenue (from income accounts) -->
+        <record id="action_smileliving_revenue" model="ir.actions.act_window">
+            <field name="name">Doanh thu (SmileLiving)</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_mode">graph,pivot,list,form</field>
+            <field name="domain">[("smileliving_is_smileliving","=",True),("account_id.account_type","=","income"),("move_id.state","=","posted"),("display_type","not in",("line_section","line_note"))]</field>
+        </record>
+
+        <menuitem id="menu_smileliving_reporting_revenue"
+                  name="Doanh thu"
+                  parent="menu_smileliving_reporting_root"
+                  action="action_smileliving_revenue"
+                  sequence="30"/>
+
+        <!-- 4) SmileLiving Receivables (unreconciled) -->
+        <record id="action_smileliving_receivables" model="ir.actions.act_window">
+            <field name="name">Công nợ phải thu (SmileLiving)</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_mode">list,pivot,graph,form</field>
+            <field name="domain">[("smileliving_is_smileliving","=",True),("account_id.account_type","=","asset_receivable"),("reconciled","=",False)]</field>
+            <field name="context">{"search_default_posted": 1}</field>
+        </record>
+
+        <menuitem id="menu_smileliving_reporting_receivables"
+                  name="Công nợ phải thu"
+                  parent="menu_smileliving_reporting_root"
+                  action="action_smileliving_receivables"
+                  sequence="40"/>
+    </data>
+</odoo>
