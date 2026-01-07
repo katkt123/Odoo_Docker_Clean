@@ -30,7 +30,7 @@ class AccountMoveLine(models.Model):
         index=True,
     )
 
-    @api.depends("analytic_distribution", "company_id")
+    @api.depends("move_id.line_ids.analytic_distribution", "company_id")
     def _compute_smileliving_is_smileliving(self):
         lines_by_company = {}
         for line in self:
@@ -46,14 +46,27 @@ class AccountMoveLine(models.Model):
             aa_id = aa.id if aa else False
             aa_key = str(aa_id) if aa_id else None
 
+            if not aa_id:
+                for line in lines:
+                    line.smileliving_is_smileliving = False
+                continue
+
+            moves = lines.mapped("move_id")
+            move_flag = {}
+            for move in moves:
+                is_smile = False
+                for move_line in move.line_ids:
+                    dist = move_line.analytic_distribution or {}
+                    if dist and (aa_key in dist or aa_id in dist):
+                        is_smile = True
+                        break
+                move_flag[move.id] = is_smile
+
             for line in lines:
-                dist = line.analytic_distribution or {}
-                if not aa_id or not dist:
+                if not line.move_id:
                     line.smileliving_is_smileliving = False
                 else:
-                    line.smileliving_is_smileliving = (
-                        aa_key in dist or aa_id in dist
-                    )
+                    line.smileliving_is_smileliving = bool(move_flag.get(line.move_id.id))
 
     @api.depends('product_id', 'product_id.product_tmpl_id')
     def _compute_smileliving_property_project(self):
