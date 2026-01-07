@@ -9,6 +9,7 @@
             <field name="arch" type="xml">
                 <list string="Bất Động Sản">
                     <field name="product_tmpl_id"/>
+                    <field name="project_id"/>
                     <field name="is_publish" widget="boolean_toggle"/>
                     <field name="price_vnd" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     <field name="type_id"/>
@@ -61,6 +62,7 @@
 
                         <group>
                             <field name="product_tmpl_id"/>
+                            <field name="project_id"/>
                             <field name="is_publish" widget="boolean_toggle"/>
                             <field name="price_vnd" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="account_invoiced_total" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
@@ -102,8 +104,9 @@
         </record>
 
         <menuitem id="menu_house_root" name="SmileLiving" sequence="10"/>
+        <menuitem id="menu_smileliving_management" name="Quản lý" parent="menu_house_root" sequence="15"/>
         <menuitem id="menu_house_items" name="Bất Động Sản" action="action_house_products"
-                  parent="menu_house_root" sequence="20"/>
+              parent="menu_smileliving_management" sequence="20"/>
 
     </data>
 </odoo>

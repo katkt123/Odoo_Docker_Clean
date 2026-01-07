@@ -7,6 +7,38 @@
                   parent="menu_house_root"
                   sequence="30"/>
 
+        <!-- Core financial statements (company-wide) -->
+        <menuitem id="menu_smileliving_reporting_statements"
+              name="Báo cáo chuẩn"
+              parent="menu_smileliving_reporting_root"
+              sequence="1"/>
+
+        <menuitem id="menu_smileliving_reporting_balance_sheet"
+              name="Bảng cân đối kế toán"
+              parent="menu_smileliving_reporting_statements"
+              action="base_accounting_kit.action_balance_sheet_report"
+              sequence="1"/>
+
+        <menuitem id="menu_smileliving_reporting_profit_loss"
+              name="Báo cáo kết quả kinh doanh (Lãi/Lỗ)"
+              parent="menu_smileliving_reporting_statements"
+              action="base_accounting_kit.action_profit_and_loss_report"
+              sequence="2"/>
+
+        <menuitem id="menu_smileliving_reporting_cash_flow"
+              name="Báo cáo dòng tiền"
+              parent="menu_smileliving_reporting_statements"
+              action="base_accounting_kit.action_cash_flow_report"
+              sequence="3"/>
+
+          <!-- Management reports (SmileLiving) -->
+          <menuitem id="menu_smileliving_reporting_management"
+              name="Quản lý"
+              parent="menu_smileliving_reporting_root"
+              sequence="10"/>
+
+
+        
         <!-- 1) SmileLiving Invoices -->
         <record id="action_smileliving_customer_invoices" model="ir.actions.act_window">
             <field name="name">Hóa đơn (SmileLiving)</field>
@@ -18,7 +50,7 @@
 
         <menuitem id="menu_smileliving_reporting_invoices"
                   name="Hóa đơn"
-                  parent="menu_smileliving_reporting_root"
+                  parent="menu_smileliving_reporting_management"
                   action="action_smileliving_customer_invoices"
                   sequence="10"/>
 
@@ -33,9 +65,38 @@
 
         <menuitem id="menu_smileliving_reporting_journal_items"
                   name="Bút toán"
-                  parent="menu_smileliving_reporting_root"
+                  parent="menu_smileliving_reporting_management"
                   action="action_smileliving_journal_items"
                   sequence="20"/>
+
+        <!-- Profit/Loss for SmileLiving (by Project / by Property) -->
+        <record id="action_smileliving_pnl_by_project" model="ir.actions.act_window">
+            <field name="name">Lãi/Lỗ theo Dự án (SmileLiving)</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_mode">graph,pivot,list</field>
+            <field name="domain">[("smileliving_is_smileliving","=",True),("move_id.state","=","posted"),("display_type","not in",("line_section","line_note")),("account_id.account_type","in",("income","expense","direct_cost"))]</field>
+            <field name="context">{"group_by": ["smileliving_project_id"]}</field>
+        </record>
+
+        <record id="action_smileliving_pnl_by_property" model="ir.actions.act_window">
+            <field name="name">Lãi/Lỗ theo Căn (SmileLiving)</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_mode">graph,pivot,list</field>
+            <field name="domain">[("smileliving_is_smileliving","=",True),("move_id.state","=","posted"),("display_type","not in",("line_section","line_note")),("account_id.account_type","in",("income","expense","direct_cost"))]</field>
+            <field name="context">{"group_by": ["smileliving_property_id"]}</field>
+        </record>
+
+        <menuitem id="menu_smileliving_reporting_pnl_by_project"
+                  name="Lãi/Lỗ theo Dự án"
+                  parent="menu_smileliving_reporting_management"
+                  action="action_smileliving_pnl_by_project"
+                  sequence="25"/>
+
+        <menuitem id="menu_smileliving_reporting_pnl_by_property"
+                  name="Lãi/Lỗ theo Căn"
+                  parent="menu_smileliving_reporting_management"
+                  action="action_smileliving_pnl_by_property"
+                  sequence="26"/>
 
         <!-- 3) SmileLiving Revenue (from income accounts) -->
         <record id="action_smileliving_revenue" model="ir.actions.act_window">
@@ -47,7 +108,7 @@
 
         <menuitem id="menu_smileliving_reporting_revenue"
                   name="Doanh thu"
-                  parent="menu_smileliving_reporting_root"
+                  parent="menu_smileliving_reporting_management"
                   action="action_smileliving_revenue"
                   sequence="30"/>
 
@@ -62,7 +123,7 @@
 
         <menuitem id="menu_smileliving_reporting_receivables"
                   name="Công nợ phải thu"
-                  parent="menu_smileliving_reporting_root"
+                  parent="menu_smileliving_reporting_management"
                   action="action_smileliving_receivables"
                   sequence="40"/>
     </data>

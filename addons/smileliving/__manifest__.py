@@ -14,6 +14,7 @@
         'data/smileliving_seed_cron.xml',
         'views/house_property_views.xml',
         'views/smileliving_reporting_views.xml',
+        'views/smileliving_project_views.xml',
         'views/property_type_views.xml',
         'views/crm_lead_interest_views.xml',
         'views/sale_order_interest_views.xml',

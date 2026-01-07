@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_smileliving_project_list" model="ir.ui.view">
+            <field name="name">smileliving.project.list</field>
+            <field name="model">smileliving.project</field>
+            <field name="arch" type="xml">
+                <list string="Dự án">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="company_id"/>
+                    <field name="active"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_smileliving_project_form" model="ir.ui.view">
+            <field name="name">smileliving.project.form</field>
+            <field name="model">smileliving.project</field>
+            <field name="arch" type="xml">
+                <form string="Dự án">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="company_id"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_smileliving_projects" model="ir.actions.act_window">
+            <field name="name">Dự án</field>
+            <field name="res_model">smileliving.project</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <!-- Add menu under SmileLiving / Cấu Hình -->
+        <menuitem id="menu_smileliving_projects"
+                  name="Dự án"
+                  parent="menu_smileliving_config"
+                  action="action_smileliving_projects"
+                  sequence="5"/>
+    </data>
+</odoo>

@@ -22,6 +22,13 @@ class SmileLivingProperty(models.Model):
         tracking=True,
     )
 
+    project_id = fields.Many2one(
+        'smileliving.project',
+        string='Dự án',
+        tracking=True,
+        index=True,
+    )
+
     # Images are stored on product.template (and product.image for extra media).
     # Expose them here so users can manage images directly from the property UI.
     product_image_1920 = fields.Image(

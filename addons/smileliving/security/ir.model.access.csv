@@ -3,6 +3,7 @@ access_smileliving_property,access_smileliving_property,model_smileliving_proper
 access_smileliving_type,access_smileliving_type,model_smileliving_type,base.group_user,1,1,1,1
 access_smileliving_amenity,access_smileliving_amenity,model_smileliving_amenity,base.group_user,1,1,1,1
 access_smileliving_invoice,access_smileliving_invoice,model_smileliving_invoice,base.group_user,1,1,1,1
+access_smileliving_project,access_smileliving_project,model_smileliving_project,base.group_user,1,1,1,1
 access_tinhthanh,access_tinhthanh,model_tinh_thanh,base.group_user,1,1,1,1
 access_quanhuyen,access_quanhuyen,model_quan_huyen,base.group_user,1,1,1,1
 access_phuongxa,access_phuongxa,model_phuong_xa,base.group_user,1,1,1,1
