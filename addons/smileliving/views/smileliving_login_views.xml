@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="smileliving_shop_login" name="SmileLiving Shop Login">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="body_classname" t-value="('sl-login-no-header ' + (body_classname or '')).strip()"/>
+            <section class="sl-login-wrapper d-flex align-items-center">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-5 col-md-7">
+                            <div class="sl-login-card">
+                                <div class="sl-login-header text-center">
+                                    <h2>Đăng nhập</h2>
+                                    <p>Kết nối chuyên viên tư vấn SmileLiving</p>
+                                </div>
+
+                                <t t-if="login_error">
+                                    <div class="alert alert-danger text-center" role="alert">
+                                        Email hoặc mật khẩu không đúng
+                                    </div>
+                                </t>
+
+                                <form action="/web/login" method="post">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <input type="hidden" name="redirect" t-att-value="redirect"/>
+
+                                    <div class="mb-3">
+                                        <input type="email"
+                                               class="form-control sl-input"
+                                               name="login"
+                                               required="required"
+                                               placeholder="Email"/>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <input type="password"
+                                               class="form-control sl-input"
+                                               name="password"
+                                               required="required"
+                                               placeholder="Mật khẩu"/>
+                                    </div>
+
+                                    <div class="sl-login-links">
+                                        <a href="/web/reset_password">Quên mật khẩu?</a>
+                                        <a href="/web/signup">Tạo tài khoản</a>
+                                    </div>
+
+                                    <button type="submit" class="btn sl-login-btn w-100">
+                                        Đăng nhập
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+</odoo>

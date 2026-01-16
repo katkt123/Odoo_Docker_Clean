@@ -1,6 +1,267 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <!-- Website: Projects listing page -->
+        <template id="project_list" name="SmileLiving Project List">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure">
+                    <section class="sl-hero position-relative overflow-hidden py-5">
+                        <div class="container">
+                            <div class="row align-items-center">
+                                <div class="col-lg-7">
+                                    <h1 class="display-5 fw-bold mb-3">Danh sách dự án</h1>
+                                    <p class="lead text-white-50 mb-4">Khám phá các dự án đang mở bán và cho thuê của doanh nghiệp.</p>
+                                    <a href="/shop" class="btn btn-light btn-lg shadow-sm">Xem bảng hàng</a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="py-5 bg-light">
+                        <div class="container">
+                            <div class="row g-4">
+                                <t t-foreach="projects" t-as="project">
+                                    <div class="col-12">
+                                        <div class="card border-0 shadow-sm overflow-hidden sl-project-card">
+                                            <div class="row g-0 align-items-stretch">
+                                                <div class="col-lg-6">
+                                                    <div class="sl-project-image h-100">
+                                                        <t t-if="project.image_1920">
+                                                            <img t-att-src="'/web/image/smileliving.project/%s/image_1920' % project.id" class="img-fluid h-100 w-100" style="object-fit: cover;" t-att-alt="project.name"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <div class="h-100 w-100 d-flex align-items-center justify-content-center bg-secondary text-white fw-semibold" style="min-height: 280px;">Chưa có ảnh</div>
+                                                        </t>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 d-flex">
+                                                    <div class="p-4 p-lg-5 d-flex flex-column w-100">
+                                                            <t t-set="status_label" t-value="dict(project._fields['status'].selection).get(project.status)"/>
+                                                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                                            <h3 class="mb-0"><t t-esc="project.name"/></h3>
+                                                            <span class="badge bg-primary"><t t-esc="status_label"/></span>
+                                                        </div>
+                                                        <p class="text-muted mb-3"><t t-esc="project.address"/></p>
+                                                        <div class="row g-3 mb-4">
+                                                            <div class="col-6 col-md-3">
+                                                                <div class="sl-stat">
+                                                                    <div class="sl-stat-label">Tổng căn</div>
+                                                                    <div class="sl-stat-value"><t t-esc="project.planned_unit_count or project.property_count"/></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6 col-md-3">
+                                                                <div class="sl-stat">
+                                                                    <div class="sl-stat-label">Còn trống</div>
+                                                                    <div class="sl-stat-value text-success"><t t-esc="project.available_property_count"/></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6 col-md-3">
+                                                                <div class="sl-stat">
+                                                                    <div class="sl-stat-label">Đã giữ</div>
+                                                                    <div class="sl-stat-value text-warning"><t t-esc="project.reserved_property_count"/></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6 col-md-3">
+                                                                <div class="sl-stat">
+                                                                    <div class="sl-stat-label">Đã bán</div>
+                                                                    <div class="sl-stat-value text-danger"><t t-esc="project.sold_property_count"/></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <div class="small text-muted">Dự kiến bàn giao</div>
+                                                            <div class="fw-semibold"><t t-esc="project.handover_date or 'Đang cập nhật'"/></div>
+                                                        </div>
+                                                        <div class="mt-auto d-flex gap-2">
+                                                            <a t-att-href="'/projects/%s' % project.id" class="btn btn-primary">Xem thêm</a>
+                                                            <a href="/shop" class="btn btn-outline-primary">Xem bảng hàng</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                                <t t-if="not projects">
+                                    <div class="col-12 text-center text-muted py-5">Chưa có dự án nào.</div>
+                                </t>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </t>
+        </template>
+
+        <!-- Website: Project detail page -->
+        <template id="project_detail" name="SmileLiving Project Detail">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure">
+                    <t t-set="hero_image" t-value="project.image_1920 and '/web/image/smileliving.project/%s/image_1920' % project.id"/>
+                    <section class="sl-hero sl-hero-detail position-relative overflow-hidden" t-att-style="hero_image and ('background-image: linear-gradient(120deg, rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.35)), url(%s);' % hero_image) or ''">
+                        <div class="container py-5">
+                            <div class="row align-items-end">
+                                <div class="col-lg-7 text-white">
+                                    <t t-set="status_label" t-value="dict(project._fields['status'].selection).get(project.status)"/>
+                                    <span class="badge bg-primary mb-3"><t t-esc="status_label"/></span>
+                                    <h1 class="display-5 fw-bold mb-3"><t t-esc="project.name"/></h1>
+                                    <p class="lead mb-3"><t t-esc="project.description_short or ''"/></p>
+                                    <p class="mb-1"><i class="fa fa-map-marker me-2"></i><t t-esc="project.address"/></p>
+                                    <div class="d-flex flex-wrap gap-2 mt-3">
+                                        <t t-if="project.developer_id">
+                                            <span class="badge bg-light text-dark">Chủ đầu tư: <t t-esc="project.developer_id.name"/></span>
+                                        </t>
+                                        <t t-if="project.hotline">
+                                            <span class="badge bg-light text-dark">Hotline: <t t-esc="project.hotline"/></span>
+                                        </t>
+                                        <t t-if="project.website_url">
+                                            <a t-att-href="project.website_url" class="badge bg-light text-primary" target="_blank">Website dự án</a>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="py-5 bg-light">
+                        <div class="container">
+                            <div class="row g-4">
+                                <div class="col-lg-8">
+                                    <div class="card border-0 shadow-sm p-4 mb-4">
+                                        <h4 class="mb-3">Thông tin dự án</h4>
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <div class="text-muted small">Trạng thái</div>
+                                                <div class="fw-semibold"><t t-esc="status_label"/></div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="text-muted small">Tiến độ</div>
+                                                <div class="progress" style="height: 10px;">
+                                                    <div class="progress-bar bg-success" role="progressbar"
+                                                         t-att-style="'width: %s' % (project.progress_percent or 0) + '%'"
+                                                         t-att-aria-valuenow="project.progress_percent or 0"
+                                                         aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <div class="small text-muted mt-1"><t t-esc="project.progress_percent or 0"/>%</div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="text-muted small">Khởi công</div>
+                                                <div class="fw-semibold"><t t-esc="project.start_date or 'Đang cập nhật'"/></div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="text-muted small">Dự kiến bàn giao</div>
+                                                <div class="fw-semibold"><t t-esc="project.handover_date or 'Đang cập nhật'"/></div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="text-muted small">Hotline</div>
+                                                <div class="fw-semibold"><t t-esc="project.hotline or 'Đang cập nhật'"/></div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="text-muted small">Website</div>
+                                                <div class="fw-semibold">
+                                                    <t t-if="project.website_url">
+                                                        <a t-att-href="project.website_url" class="text-decoration-none" target="_blank"><t t-esc="project.website_url"/></a>
+                                                    </t>
+                                                    <t t-else="">Đang cập nhật</t>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4">
+                                            <h5 class="mb-2">Mô tả</h5>
+                                            <t t-if="project.description">
+                                                <div t-raw="project.description" class="sl-description"></div>
+                                            </t>
+                                            <t t-else="">
+                                                <div class="text-muted">Chưa có mô tả chi tiết.</div>
+                                            </t>
+                                        </div>
+                                    </div>
+
+                                    <div class="card border-0 shadow-sm p-4">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h4 class="mb-0">Căn thuộc dự án</h4>
+                                            <a href="/shop" class="btn btn-outline-primary btn-sm">Xem bảng hàng</a>
+                                        </div>
+                                        <div class="row g-3">
+                                            <t t-foreach="sample_properties" t-as="prop">
+                                                <div class="col-md-6">
+                                                    <div class="border rounded p-3 h-100">
+                                                        <div class="fw-semibold mb-1"><t t-esc="prop.name"/></div>
+                                                        <div class="text-muted small mb-2"><t t-esc="prop.address"/></div>
+                                                        <div class="d-flex align-items-center justify-content-between small">
+                                                            <span>Diện tích: <t t-esc="prop.area"/> m²</span>
+                                                            <span class="badge bg-light text-dark"><t t-esc="prop.house_status"/></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                            <t t-if="not sample_properties">
+                                                <div class="col-12 text-muted">Chưa có căn nào được gắn vào dự án.</div>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                    <div class="col-lg-4">
+                                    <div class="card border-0 shadow-sm p-4 mb-4">
+                                        <h5 class="mb-3">Thông tin liên hệ</h5>
+                                        <div class="mb-2"><i class="fa fa-phone me-2 text-primary"></i><t t-esc="project.hotline or 'Đang cập nhật'"/></div>
+                                        <div class="mb-2"><i class="fa fa-globe me-2 text-primary"></i>
+                                            <t t-if="project.website_url">
+                                                <a t-att-href="project.website_url" target="_blank"><t t-esc="project.website_url"/></a>
+                                            </t>
+                                            <t t-else="">Đang cập nhật</t>
+                                        </div>
+                                        <div class="mb-2"><i class="fa fa-map-marker me-2 text-primary"></i><t t-esc="project.address or 'Đang cập nhật'"/></div>
+                                    </div>
+
+                                    <div class="card border-0 shadow-sm p-4">
+                                        <h5 class="mb-3">Tiện ích</h5>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            <t t-foreach="project.amenity_ids" t-as="amenity">
+                                                <span class="badge bg-secondary"><t t-esc="amenity.name"/></span>
+                                            </t>
+                                            <t t-if="not project.amenity_ids">
+                                                <span class="text-muted">Chưa khai báo tiện ích.</span>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </t>
+        </template>
+
+        <!-- Website menu entry for project list -->
+        <record id="website_menu_projects" model="website.menu">
+            <field name="name">Dự án</field>
+            <field name="url">/projects</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" eval="35"/>
+        </record>
+
+        <!-- Livechat button overlay for SmileLiving pages -->
+        <template id="smileliving_livechat_button" inherit_id="website.layout" name="SmileLiving Livechat Button">
+            <xpath expr="//body" position="inside">
+                <t t-set="LivechatChannelModel" t-value="request.env.registry.get('livechat.channel')"/>
+                <t t-if="LivechatChannelModel">
+                    <t t-set="livechat_channel" t-value="LivechatChannelModel.sudo().search([('website_published', '=', True)], limit=1)"/>
+                    <t t-if="livechat_channel">
+                        <div
+                            class="o_livechat_button shadow"
+                            role="button"
+                            aria-label="Chat với chuyên viên"
+                            t-att-data-channel-id="livechat_channel.id"
+                        >
+                            <i class="fa fa-comments" aria-hidden="true"></i>
+                        </div>
+                    </t>
+                </t>
+            </xpath>
+        </template>
+
+        <!-- Styles for project pages: moved to manifest assets (web.assets_frontend) -->
         <!-- <template id="smileliving_homepage" name="SmileLiving Homepage">
             <t t-call="website.layout">
                 <div id="wrap" class="oe_structure">
@@ -173,7 +434,7 @@
                                             </div>
                                             
                                             <!-- Interest Form -->
-                                            <form t-attf-action="/smileliving/submit_interest/{{property.product_tmpl_id.id}}" method="POST">
+                                            <form t-att-action="'/smileliving/submit_interest/%s' % property.product_tmpl_id.id" method="POST">
                                                 <div class="row">
                                                     <div class="col-md-6 mb-3">
                                                         <label for="name" class="form-label">Họ tên *</label>
@@ -365,6 +626,104 @@
                                 <t t-if="filter_area_max">
                                     <input type="hidden" name="filter_area_max" t-att-value="filter_area_max"/>
                                 </t>
+                                <t t-if="listing_source">
+                                    <input type="hidden" name="listing_source" t-att-value="listing_source"/>
+                                </t>
+                                <t t-if="tinhthanh_id">
+                                    <input type="hidden" name="tinhthanh_id" t-att-value="tinhthanh_id"/>
+                                </t>
+                                <t t-if="quanhuyen_id">
+                                    <input type="hidden" name="quanhuyen_id" t-att-value="quanhuyen_id"/>
+                                </t>
+                                <t t-if="phuongxa_id">
+                                    <input type="hidden" name="phuongxa_id" t-att-value="phuongxa_id"/>
+                                </t>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Nguồn tin (dự án/cá nhân/môi giới) -->
+                <div class="accordion-item">
+                    <div class="accordion-header h6 mb-0">
+                        <button class="accordion-button px-0 bg-transparent shadow-none"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                aria-expanded="true"
+                                data-bs-target="#smileliving_listing_source_filter">
+                            <b>Dự án</b>
+                        </button>
+                    </div>
+                    <div id="smileliving_listing_source_filter" class="accordion-collapse collapse show">
+                        <div class="flex-column mb-3">
+                            <form method="get" t-att-action="keep(listing_source=0)">
+                                <div class="form-check mb-1">
+                                    <input type="radio"
+                                           name="listing_source"
+                                           class="form-check-input"
+                                           id="listing_source_all"
+                                           value=""
+                                           t-att-checked="'checked' if not listing_source else None"
+                                           onchange="this.form.submit()"/>
+                                    <label class="form-check-label fw-normal" for="listing_source_all">Tất cả</label>
+                                </div>
+                                <div class="form-check mb-1">
+                                    <input type="radio"
+                                           name="listing_source"
+                                           class="form-check-input"
+                                           id="listing_source_individual"
+                                           value="individual"
+                                           t-att-checked="'checked' if listing_source == 'individual' else None"
+                                           onchange="this.form.submit()"/>
+                                    <label class="form-check-label fw-normal" for="listing_source_individual">Cá nhân</label>
+                                </div>
+                                <div class="form-check mb-1">
+                                    <input type="radio"
+                                           name="listing_source"
+                                           class="form-check-input"
+                                           id="listing_source_broker"
+                                           value="broker"
+                                           t-att-checked="'checked' if listing_source == 'broker' else None"
+                                           onchange="this.form.submit()"/>
+                                    <label class="form-check-label fw-normal" for="listing_source_broker">Môi giới (có dự án)</label>
+                                </div>
+
+                                <!-- Giữ lại các filter khác -->
+                                <t t-if="search">
+                                    <input type="hidden" name="search" t-att-value="search"/>
+                                </t>
+                                <t t-if="category">
+                                    <input type="hidden" name="category" t-att-value="category.id"/>
+                                </t>
+                                <t t-if="attrib_values">
+                                    <t t-foreach="attrib_values" t-as="attrib_value">
+                                        <input type="hidden" name="attribute_values" t-att-value="attrib_value"/>
+                                    </t>
+                                </t>
+                                <t t-if="tags">
+                                    <input type="hidden" name="tags" t-att-value="tags"/>
+                                </t>
+                                <t t-if="filter_type_id">
+                                    <t t-set="selected_types" t-value="filter_type_id if isinstance(filter_type_id, list) else ([filter_type_id] if filter_type_id else [])"/>
+                                    <t t-foreach="selected_types" t-as="tid">
+                                        <input type="hidden" name="filter_type_id" t-att-value="tid"/>
+                                    </t>
+                                </t>
+                                <t t-if="filter_amenity_id">
+                                    <t t-set="selected_amenities" t-value="filter_amenity_id if isinstance(filter_amenity_id, list) else ([filter_amenity_id] if filter_amenity_id else [])"/>
+                                    <t t-foreach="selected_amenities" t-as="aid">
+                                        <input type="hidden" name="filter_amenity_id" t-att-value="aid"/>
+                                    </t>
+                                </t>
+                                <t t-if="type_sale">
+                                    <input type="hidden" name="type_sale" t-att-value="type_sale"/>
+                                </t>
+                                <t t-if="filter_area_min">
+                                    <input type="hidden" name="filter_area_min" t-att-value="filter_area_min"/>
+                                </t>
+                                <t t-if="filter_area_max">
+                                    <input type="hidden" name="filter_area_max" t-att-value="filter_area_max"/>
+                                </t>
                                 <t t-if="tinhthanh_id">
                                     <input type="hidden" name="tinhthanh_id" t-att-value="tinhthanh_id"/>
                                 </t>
@@ -475,6 +834,9 @@
                                 <t t-if="filter_area_max">
                                     <input type="hidden" name="filter_area_max" t-att-value="filter_area_max"/>
                                 </t>
+                                <t t-if="listing_source">
+                                    <input type="hidden" name="listing_source" t-att-value="listing_source"/>
+                                </t>
                             </form>
                         </div>
                     </div>
@@ -580,7 +942,7 @@
 
         <!-- Đổi nhãn Price Range mặc định thành "Giá" -->
         <template id="smileliving_remove_default_price_range" inherit_id="website_sale.filter_products_price" name="SmileLiving Rename Price Range">
-            <xpath expr="//b[normalize-space()='Price Range']" position="replace">
+            <xpath expr="//div[@id='o_wsale_price_range_option']//b" position="replace">
                 <b>Giá</b>
             </xpath>
         </template>
@@ -605,6 +967,9 @@
                         </t>
                         <t t-if="filter_area_max">
                             <input type="hidden" name="filter_area_max" t-att-value="filter_area_max"/>
+                        </t>
+                        <t t-if="listing_source">
+                            <input type="hidden" name="listing_source" t-att-value="listing_source"/>
                         </t>
                         <t t-if="filter_type_id">
                             <t t-set="selected_types" t-value="filter_type_id if isinstance(filter_type_id, list) else ([filter_type_id] if filter_type_id else [])"/>
@@ -725,6 +1090,9 @@
                                     <t t-if="type_sale">
                                         <input type="hidden" name="type_sale" t-att-value="type_sale"/>
                                     </t>
+                                    <t t-if="listing_source">
+                                        <input type="hidden" name="listing_source" t-att-value="listing_source"/>
+                                    </t>
                                     <t t-if="filter_area_min">
                                         <input type="hidden" name="filter_area_min" t-att-value="filter_area_min"/>
                                     </t>
@@ -840,6 +1208,9 @@
                                     <t t-if="type_sale">
                                         <input type="hidden" name="type_sale" t-att-value="type_sale"/>
                                     </t>
+                                    <t t-if="listing_source">
+                                        <input type="hidden" name="listing_source" t-att-value="listing_source"/>
+                                    </t>
                                     <t t-if="filter_area_min">
                                         <input type="hidden" name="filter_area_min" t-att-value="filter_area_min"/>
                                     </t>
@@ -901,6 +1272,9 @@
                                     </t>
                                     <t t-if="type_sale">
                                         <input type="hidden" name="type_sale" t-att-value="type_sale"/>
+                                    </t>
+                                    <t t-if="listing_source">
+                                        <input type="hidden" name="listing_source" t-att-value="listing_source"/>
                                     </t>
                                     <t t-if="filter_area_min">
                                         <input type="hidden" name="filter_area_min" t-att-value="filter_area_min"/>

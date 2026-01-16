@@ -1,0 +1,8 @@
+.sl-hero {background: linear-gradient(120deg, #0f172a, #dee90e) !important; color: #fff; min-height: 320px;}
+.sl-hero-detail {background-size: cover; background-position: center;}
+.sl-project-card {border-radius: 18px;}
+.sl-project-image img {min-height: 280px;}
+.sl-stat {background: #f8fafc; border-radius: 10px; padding: 10px 12px;}
+.sl-stat-label {font-size: 12px; color: #64748b;}
+.sl-stat-value {font-size: 18px; font-weight: 700;}
+.sl-description p {margin-bottom: .75rem;}

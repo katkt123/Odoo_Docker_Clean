@@ -8,6 +8,12 @@
                 <list string="Dự án">
                     <field name="name"/>
                     <field name="code"/>
+                    <field name="status"/>
+                    <field name="start_date"/>
+                    <field name="handover_date"/>
+                    <field name="developer_id"/>
+                    <field name="property_count"/>
+                    <field name="available_property_count"/>
                     <field name="company_id"/>
                     <field name="active"/>
                 </list>
@@ -20,12 +26,52 @@
             <field name="arch" type="xml">
                 <form string="Dự án">
                     <sheet>
-                        <group>
+                        <header>
+                            <field name="status" widget="statusbar"/>
+                            <button name="%(action_smileliving_projects)d" string="Mở danh sách" type="action" class="oe_stat_button" icon="fa-list"/>
+                            <button name="action_open_properties" string="Căn thuộc dự án" type="object" class="oe_stat_button" icon="fa-building">
+                                <field name="property_count" widget="statinfo"/>
+                            </button>
+                        </header>
+                        <group name="main" string="Thông tin chung" colspan="4">
                             <field name="name"/>
                             <field name="code"/>
                             <field name="company_id"/>
                             <field name="active"/>
+                            <field name="developer_id"/>
+                            <field name="hotline"/>
+                            <field name="website_url"/>
+                            <field name="planned_unit_count"/>
+                            <field name="image_1920" widget="image" class="oe_avatar"/>
                         </group>
+                        <group name="location" string="Vị trí" colspan="4">
+                            <field name="address"/>
+                            <field name="tinhthanh_id"/>
+                            <field name="quanhuyen_id"/>
+                            <field name="phuongxa_id"/>
+                        </group>
+                        <group name="timeline" string="Tiến độ" colspan="4">
+                            <field name="start_date"/>
+                            <field name="handover_date"/>
+                            <field name="progress_percent" widget="progressbar" options="{'max_value': 100}"/>
+                        </group>
+                        <notebook>
+                            <page string="Mô tả">
+                                <field name="description_short"/>
+                                <field name="description" nolabel="1"/>
+                            </page>
+                            <page string="Tiện ích">
+                                <field name="amenity_ids" widget="many2many_tags"/>
+                            </page>
+                            <page string="Thống kê">
+                                <group>
+                                    <field name="property_count" readonly="1"/>
+                                    <field name="available_property_count" readonly="1"/>
+                                    <field name="reserved_property_count" readonly="1"/>
+                                    <field name="sold_property_count" readonly="1"/>
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>

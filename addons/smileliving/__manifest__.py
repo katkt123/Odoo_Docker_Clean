@@ -6,7 +6,15 @@
     'assets': {
         'web.assets_frontend': [
             'smileliving/static/src/interactions/area_range.js',
-            
+            'smileliving/static/src/css/project.css',
+            'smileliving/static/src/css/website.css',
+            'smileliving/static/src/js/livechat_product_action.js',
+        ],
+        'web.assets_backend': [
+            'smileliving/static/src/js/livechat_product_action.js',
+        ],
+        'im_livechat.assets_embed': [
+            'smileliving/static/src/js/livechat_product_action.js',
         ],
     },
     'data': [
@@ -21,6 +29,7 @@
         'views/website_sale_interest_inherit.xml',
         'views/website_sale_wishlist_interest_inherit.xml',
         'views/smileliving_template_views.xml',
+        'views/smileliving_login_views.xml',
         'views/product_item_inherit.xml',
         'views/wishlist_minimal_tile_inherit.xml',
     ],

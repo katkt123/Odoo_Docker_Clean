@@ -119,6 +119,14 @@ class SmileLivingController(http.Controller):
             'property': prop,
         })
     
+    @http.route('/smileliving/login', type='http', auth='public', website=True)
+    def shop_login(self, **kwargs):
+        """Trang login riêng cho khách hàng shop muốn hỏi tư vấn"""
+        return request.render('smileliving.smileliving_shop_login', {
+            'redirect': kwargs.get('redirect') or '/shop',
+            'login_error': bool(request.params.get('login_error')),
+        })
+
     @http.route('/smileliving/submit_interest/<int:property_id>', type='http', auth='public', website=True, methods=['POST'], csrf=False)
     def submit_interest(self, property_id, **kwargs):
         """Xử lý submit form quan tâm và tạo CRM Lead"""
@@ -305,3 +313,36 @@ class SmileLivingController(http.Controller):
     @http.route('/shop/wishlist/interest', type='json', auth='public', website=True)
     def shop_wishlist_interest(self, product_id, **kw):
         return self.wishlist_interest(product_id, **kw)
+
+    # ------------------------------------------------------------------
+    # Project listing & detail (website)
+    # ------------------------------------------------------------------
+
+    @http.route(['/projects', '/du-an'], type='http', auth='public', website=True)
+    def project_list(self, **kwargs):
+        website_company = self._website_company()
+        Project = request.env['smileliving.project'].sudo().with_context(active_test=True)
+        projects = Project.search([
+            ('company_id', 'in', [website_company.id, False]),
+            ('active', '=', True),
+        ], order='start_date desc, id desc')
+
+        return request.render('smileliving.project_list', {
+            'projects': projects,
+        })
+
+    @http.route('/projects/<model("smileliving.project"):project>', type='http', auth='public', website=True)
+    def project_detail(self, project, **kwargs):
+        website_company = self._website_company()
+
+        if project.company_id and project.company_id.id not in (website_company.id,):
+            return request.not_found()
+
+        props = request.env['smileliving.property'].sudo().search([
+            ('project_id', '=', project.id),
+        ], limit=4, order='create_date desc, id desc')
+
+        return request.render('smileliving.project_detail', {
+            'project': project.sudo(),
+            'sample_properties': props,
+        })

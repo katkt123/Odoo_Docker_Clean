@@ -1,6 +1,7 @@
 import re
 
 from odoo import http
+from odoo.api import Environment as ApiEnvironment
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.http import request
 from odoo.fields import Domain
@@ -72,6 +73,14 @@ class SmileLivingShop(WebsiteSale):
         type_sale = _first(request_args.get('type_sale', ''))
         if type_sale in ('sale', 'rent'):
             prop_domain.append(('type_sale', '=', type_sale))
+            has_smileliving_filters = True
+
+        listing_source = _first(request_args.get('listing_source', ''))
+        if listing_source == 'individual':
+            prop_domain.append(('project_id', '=', False))
+            has_smileliving_filters = True
+        elif listing_source == 'broker':
+            prop_domain.append(('project_id', '!=', False))
             has_smileliving_filters = True
 
         # Area range
@@ -260,6 +269,7 @@ class SmileLivingShop(WebsiteSale):
         type_sale = request_args.get('type_sale', '')
         filter_area_min = request_args.get('filter_area_min', '')
         filter_area_max = request_args.get('filter_area_max', '')
+        listing_source = request_args.get('listing_source', '')
         # (Removed) price filtering
         
         # Lấy filter địa lý
@@ -286,6 +296,8 @@ class SmileLivingShop(WebsiteSale):
             kwargs['filter_area_min'] = filter_area_min
         if filter_area_max:
             kwargs['filter_area_max'] = filter_area_max
+        if listing_source:
+            kwargs['listing_source'] = listing_source
         # (Removed) price filtering
         
         # Thêm filter địa lý vào kwargs
@@ -342,9 +354,38 @@ class SmileLivingShop(WebsiteSale):
     ], type='http', auth='public', website=True)
     def shop(self, page=0, category='', search='', **kwargs):
         """Override shop method để thêm context cho filter"""
-        # Gọi super() để lấy context gốc
-        # Gọi super() để lấy context gốc
-        response = super().shop(category=category, search=search, **kwargs)
+        # Ensure multi-company context matches the current website.
+        # Portal users may have a different allowed_company_ids, which would blank /shop.
+        website_company = self._website_company()
+
+        # Multi-company gotcha:
+        # - Forcing allowed_company_ids to a company the current (portal) user is not allowed for
+        #   raises: "Access to unauthorized or invalid companies."
+        # - But we still want /shop to behave like a public page (visible products only).
+        # Solution: if the current user isn't allowed for the website company, temporarily
+        # render the shop page as the website public user scoped to the website company.
+        response = None
+        if website_company and website_company.id in request.env.user.company_ids.ids:
+            request.update_context(allowed_company_ids=[website_company.id])
+            response = super().shop(category=category, search=search, **kwargs)
+        elif website_company and request.website and request.website.user_id:
+            old_env = request.env
+            try:
+                # Use superuser to avoid multi-company validation errors for portal users.
+                # We still keep the shop domains strict (published/active) in the other hooks.
+                fallback_uid = 1
+                new_context = dict(old_env.context)
+                new_context.update({
+                    'allowed_company_ids': [website_company.id],
+                    'force_company': website_company.id,
+                    'allowed_company_id': website_company.id,
+                })
+                request.env = ApiEnvironment(old_env.cr, fallback_uid, new_context)
+                response = super().shop(category=category, search=search, **kwargs)
+            finally:
+                request.env = old_env
+        else:
+            response = super().shop(category=category, search=search, **kwargs)
         
         # Lấy filter parameters từ request.httprequest.args (đúng cách)
         # Vì kwargs có thể không có khi chuyển trang
@@ -355,6 +396,7 @@ class SmileLivingShop(WebsiteSale):
         type_sale = request_args.get('type_sale', '') or kwargs.get('type_sale', '')
         filter_area_min = request_args.get('filter_area_min', '') or kwargs.get('filter_area_min', '')
         filter_area_max = request_args.get('filter_area_max', '') or kwargs.get('filter_area_max', '')
+        listing_source = request_args.get('listing_source', '') or kwargs.get('listing_source', '')
         # (Removed) price filtering
         
         # Lấy filter địa lý
@@ -378,7 +420,7 @@ class SmileLivingShop(WebsiteSale):
         # Available min/max area for slider.
         # Prefer computing from the currently displayed products to avoid mismatches
         # when website/company context and property ownership diverge.
-        website_company = self._website_company()
+        website_company = website_company or self._website_company()
 
         Property = request.env['smileliving.property'].sudo()
         products = response.qcontext.get('products')
@@ -469,6 +511,7 @@ class SmileLivingShop(WebsiteSale):
         response.qcontext['filter_area_max'] = current_area_max
         response.qcontext['available_min_area'] = available_min_area
         response.qcontext['available_max_area'] = available_max_area
+        response.qcontext['listing_source'] = listing_source
         # (Removed) price filtering
         
         # Thêm context cho filter địa lý

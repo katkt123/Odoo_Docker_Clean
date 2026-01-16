@@ -104,9 +104,8 @@
         </record>
 
         <menuitem id="menu_house_root" name="SmileLiving" sequence="10"/>
-        <menuitem id="menu_smileliving_management" name="Quản lý" parent="menu_house_root" sequence="15"/>
         <menuitem id="menu_house_items" name="Bất Động Sản" action="action_house_products"
-              parent="menu_smileliving_management" sequence="20"/>
+                  parent="menu_house_root" sequence="20"/>
 
     </data>
 </odoo>

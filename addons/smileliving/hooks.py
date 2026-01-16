@@ -105,3 +105,16 @@ def post_init_hook(cr, registry):
              )
             """
         )
+
+    # Ensure portal users can access website data across website companies.
+    # Otherwise, portal users whose allowed companies don't include the website's company
+    # can get 404 on product detail URLs due to multi-company record rules on product.template.
+    website_company_ids = env['website'].sudo().search([]).mapped('company_id').ids
+    if website_company_ids:
+        portal_users = env['res.users'].sudo().search([('share', '=', True)])
+        for user in portal_users:
+            missing = set(website_company_ids) - set(user.company_ids.ids)
+            if missing:
+                user.with_context(smileliving_skip_company_fix=True).write({
+                    'company_ids': [(4, cid) for cid in sorted(missing)],
+                })

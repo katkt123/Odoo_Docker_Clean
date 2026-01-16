@@ -141,7 +141,7 @@ class SmileLivingWishlist(WebsiteSaleWishlist):
             except Exception:
                 _logger.exception('Wishlist normalization failed for wish_id=%s', wish.id)
 
-        wishes = request.env['product.wishlist'].with_context(display_default_code=False).current()
+        wishes = request.env['product.wishlist'].sudo().with_context(display_default_code=False).current()
         return request.render('website_sale_wishlist.product_wishlist', {'wishes': wishes})
 
     @route('/shop/wishlist/get_product_ids', type='jsonrpc', auth='public', website=True, readonly=True)

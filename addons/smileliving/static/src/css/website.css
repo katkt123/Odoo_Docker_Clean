@@ -1,0 +1,113 @@
+/* ===== SmileLiving Product Card ===== */
+
+.sl-area {
+    font-size: 0.9rem;
+}
+
+.sl-meta {
+    font-size: 0.85rem;
+}
+
+.sl-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.6rem;
+    background-color: #f8f9fa;
+    border-radius: 999px;
+    color: #495057;
+}
+
+.sl-meta-item i {
+    font-size: 0.85rem;
+    color: #cce10a;
+}
+
+.sl-login-page {
+    background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 70%);
+}
+
+.sl-login-card {
+    border-radius: 1rem;
+}
+
+.sl-login-form .form-control {
+    border-radius: 0.6rem;
+}
+
+.sl-login-form .form-label {
+    font-weight: 500;
+}
+
+/* LOGIN PAGE */
+.sl-login-wrapper {
+    min-height: 80vh;
+    background: linear-gradient(135deg, #f5f7fa, #eef1f6);
+}
+
+.sl-login-card {
+    background: #ffffff;
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+.sl-login-header h2 {
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.sl-login-header p {
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: 24px;
+}
+
+.sl-input {
+    height: 48px;
+    border-radius: 10px;
+    padding: 0 14px;
+    font-size: 14px;
+}
+
+.sl-login-links {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.sl-login-links a {
+    text-decoration: none;
+    color: #0d6efd;
+}
+
+.sl-login-btn {
+    height: 48px;
+    border-radius: 10px;
+    font-weight: 600;
+    background: #0d6efd;
+    color: #fff;
+    border: none;
+}
+
+.sl-login-btn:hover {
+    background: #0b5ed7;
+}
+
+/* Hide Odoo website header/footer on SmileLiving login page */
+body.sl-login-no-header header,
+body.sl-login-no-header #top,
+body.sl-login-no-header header#top,
+body.sl-login-no-header .o_header_standard {
+    display: none !important;
+}
+
+body.sl-login-no-header footer,
+body.sl-login-no-header #footer {
+    display: none !important;
+}
+
+body.sl-login-no-header #wrapwrap {
+    padding-top: 0 !important;
+}

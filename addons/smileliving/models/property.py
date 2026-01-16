@@ -158,6 +158,36 @@ class SmileLivingProperty(models.Model):
         digits='Product Price',
     )
 
+    bedroom_count = fields.Integer(
+        string='Phòng ngủ',
+        default=0,
+        tracking=True,
+        help='Số phòng ngủ của căn',
+    )
+
+    bathroom_count = fields.Integer(
+        string='WC',
+        default=0,
+        tracking=True,
+        help='Số phòng vệ sinh của căn',
+    )
+
+    house_direction = fields.Selection(
+        [
+            ('n', 'Bắc'),
+            ('ne', 'Đông Bắc'),
+            ('e', 'Đông'),
+            ('se', 'Đông Nam'),
+            ('s', 'Nam'),
+            ('sw', 'Tây Nam'),
+            ('w', 'Tây'),
+            ('nw', 'Tây Bắc'),
+        ],
+        string='Hướng',
+        tracking=True,
+        help='Hướng của căn (Bắc/Đông Bắc/Đông...)',
+    )
+
     def _get_related_invoice_domain(self):
         self.ensure_one()
         if not self.product_tmpl_id:
