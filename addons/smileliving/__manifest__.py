@@ -9,6 +9,8 @@
             'smileliving/static/src/css/project.css',
             'smileliving/static/src/css/website.css',
             'smileliving/static/src/js/livechat_product_action.js',
+            'smileliving/static/src/scss/loan_policy.scss',
+            'smileliving/static/src/js/loan_calculator.js',
         ],
         'web.assets_backend': [
             'smileliving/static/src/js/livechat_product_action.js',
@@ -32,6 +34,7 @@
         'views/smileliving_login_views.xml',
         'views/product_item_inherit.xml',
         'views/wishlist_minimal_tile_inherit.xml',
+        'views/website_bank_policy.xml',
     ],
     'installable': True,
     'application': True,
