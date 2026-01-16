@@ -3,9 +3,86 @@
         <t t-call="website.layout">
             <div class="sl-loan-policy-page">
                 <section class="container py-5">
-                    <h1 class="h3 mb-3">Chính sách ngân hàng</h1>
-                    <!-- <p class="text-muted">Debug: bank policy page loaded</p> -->
-                    <div class="sl-loan-policy-root" id="sl-loan-policy"></div>
+                    <div class="sl-loan-policy-hero shadow-lg">
+                        <div class="row align-items-center gy-4">
+                            <div class="col-lg-7">
+                                <p class="eyebrow text-uppercase mb-2">Chính sách ngân hàng</p>
+                                <h1 class="mb-3">Chính sách hỗ trợ vay vốn biệt thự, condotel, shophouse</h1>
+                                <p class="lead mb-4">Chúng tôi kết nối với mạng lưới ngân hàng đối tác để mang đến các gói ưu đãi lãi suất linh hoạt, áp dụng cho nhiều loại hình bất động sản mà SmileLiving đang phát triển.</p>
+                                <div class="hero-cta d-flex flex-wrap gap-3">
+                                    <a class="btn btn-light btn-lg" href="#sl-loan-policy">Tính ngay kế hoạch vay</a>
+                                    <a class="btn btn-outline-light btn-lg" href="mailto:contact@smileliving.vn">Gửi yêu cầu tư vấn</a>
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="hero-card p-4 bg-white bg-opacity-90 text-dark rounded-4 shadow">
+                                    <h4 class="mb-2">Hợp tác với</h4>
+                                    <div class="hero-stats">
+                                        <div>
+                                            <strong>8+</strong>
+                                            <span>Ngân hàng đối tác</span>
+                                        </div>
+                                        <div>
+                                            <strong>36 tháng</strong>
+                                            <span>Hỗ trợ lãi suất ưu đãi</span>
+                                        </div>
+                                    </div>
+                                    <p class="small text-muted mt-3 mb-0">Cam kết cập nhật biểu phí mới nhất hàng tuần và có đội ngũ tư vấn hỗ trợ theo sát hồ sơ.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4 mt-5">
+                        <div class="col-lg-10 mx-auto">
+                            <div class="sl-loan-calculator-card">
+                                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                                    <div>
+                                        <p class="eyebrow text-uppercase mb-1">Tư duy tính toán</p>
+                                        <h3 class="h5 mb-0">Công cụ ước tính đơn giản</h3>
+                                    </div>
+                                    <span class="badge bg-success">Miễn phí</span>
+                                </div>
+                                <div class="sl-loan-policy-root" id="sl-loan-policy"></div>
+                                <div class="sl-policy-highlight-card mt-2">
+                                    <h3>Ưu đãi nổi bật</h3>
+                                    <ul class="list-unstyled mt-3">
+                                        <li>Miễn phí thẩm định hồ sơ và hỗ trợ chuẩn hóa giấy tờ</li>
+                                        <li>Lãi suất cạnh tranh từ <strong>7.5%/năm</strong> trong kỳ đầu</li>
+                                        <li>Giảm áp lực phí trả trước cùng gói bảo hiểm vay vốn linh hoạt</li>
+                                    </ul>
+                                    <div class="mt-3">
+                                        <p class="fw-semibold mb-1">Cần hỗ trợ nhanh?</p>
+                                        <p class="mb-0 text-muted">Gọi ngay hotline <a href="tel:+842438888888">(024) 3888 8888</a> để được tư vấn riêng.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sl-policy-details mt-5">
+                        <h2 class="h4 mb-3">Các bước hỗ trợ vay</h2>
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <div class="detail-card">
+                                    <div class="title">1. Chuẩn bị hồ sơ</div>
+                                    <p>SmileLiving hướng dẫn cách chuẩn hóa giấy tờ, đề xuất gói vay phù hợp với tiến độ giải ngân.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="detail-card">
+                                    <div class="title">2. Đàm phán lãi suất</div>
+                                    <p>Đại diện khách hàng làm việc trực tiếp với ngân hàng đối tác để tối ưu lãi suất và kỳ hạn.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="detail-card">
+                                    <div class="title">3. Theo dõi tiến độ</div>
+                                    <p>Đội ngũ SmileLiving theo dõi từng giai đoạn duyệt vay, hỗ trợ giải trình khi cần.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </section>
             </div>
         </t>

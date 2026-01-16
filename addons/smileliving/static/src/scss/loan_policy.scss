@@ -1,17 +1,122 @@
 .sl-loan-policy-page {
-  background: #f5f7fb;
+  background: radial-gradient(circle at top, #fefefe 0%, #f5f7fb 40%, #edf1f8 100%);
+  min-height: 100vh;
 }
 
-.sl-loan-calculator {
-  max-width: 960px;
-  margin: 0 auto;
-  box-shadow: 0 0.5rem 1.5rem rgba(16, 24, 40, 0.1);
+.sl-loan-policy-hero {
+  background: linear-gradient(135deg, #0d6efd, #004085);
+  border-radius: 2rem;
+  color: #fff;
+  padding: 3rem;
+  position: relative;
+  overflow: hidden;
 }
 
-.sl-field .form-range {
+.sl-loan-policy-hero::after {
+  content: "";
+  position: absolute;
+  inset: 1rem;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+}
+
+.sl-loan-policy-hero .lead {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.sl-loan-policy-hero h1 {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.eyebrow {
+  font-size: 0.8rem;
+  letter-spacing: 0.25em;
+}
+
+.hero-cta .btn {
+  min-width: 180px;
+}
+
+.hero-card {
+  backdrop-filter: blur(8px);
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.hero-stats strong {
+  font-size: 1.4rem;
+}
+
+.sl-loan-calculator-card {
+  border-radius: 1.75rem;
+  border: 1px solid rgba(13, 110, 253, 0.2);
+  background: #f8f9ff;
+  padding: 3rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  box-shadow: 0 1.5rem 2rem rgba(13, 110, 253, 0.12);
+}
+
+.sl-loan-calculator-card .sl-loan-policy-root {
+  min-height: 560px;
   width: 100%;
 }
 
-.sl-summary .sl-summary-card {
-  border-radius: 0.75rem;
+.sl-policy-highlight-card {
+  border-radius: 1.25rem;
+  border: 1px solid rgba(13, 110, 253, 0.2);
+  background: #fff;
+  padding: 1.75rem;
+  box-shadow: 0 1rem 1.5rem rgba(13, 110, 253, 0.08);
+}
+
+.sl-policy-highlight-card h3 {
+  font-weight: 600;
+}
+
+.sl-policy-highlight-card ul li {
+  margin-bottom: 0.75rem;
+}
+
+.sl-policy-detail  {
+  position: relative;
+}
+
+.sl-policy-details {
+  background: #fff;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  box-shadow: 0 1.5rem 2rem rgba(0, 0, 0, 0.05);
+}
+
+.detail-card {
+  border-radius: 1rem;
+  border: 1px solid rgba(13, 110, 253, 0.15);
+  padding: 1.5rem;
+  background: #f8f9ff;
+  height: 100%;
+}
+
+.detail-card .title {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 992px) {
+  .sl-loan-policy-hero {
+    padding: 2rem;
+  }
+
+  .sl-loan-calculator-card .sl-loan-policy-root {
+    min-height: 420px;
+  }
 }
