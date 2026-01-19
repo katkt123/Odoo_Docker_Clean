@@ -4,4 +4,5 @@ from . import smileliving_shop
 from . import smileliving_wishlist
 from . import livechat_product
 from . import bank_policy
+from . import portal_listings
 

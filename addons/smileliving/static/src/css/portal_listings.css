@@ -1,0 +1,23 @@
+.o_smile_manage_page .o_smile_search{min-width: 280px;}
+.o_smile_manage_page .o_smile_cta_inline{border-radius: 999px; padding: 8px 14px; font-weight: 600;}
+
+.o_smile_tabs .o_smile_tab{border-radius: 999px; font-weight: 600;}
+
+.o_smile_listing_card{border-radius: 14px; overflow: hidden;}
+.o_smile_listing_card .o_smile_thumb{
+  height: 170px;
+  background-color: #f1f3f5;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+.o_smile_listing_card .o_smile_badge{
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-weight: 600;
+}
+
+.o_smile_submit_page .card{border-radius: 14px;}

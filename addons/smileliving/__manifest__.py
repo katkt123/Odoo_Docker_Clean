@@ -8,6 +8,8 @@
             'smileliving/static/src/interactions/area_range.js',
             'smileliving/static/src/css/project.css',
             'smileliving/static/src/css/website.css',
+            'smileliving/static/src/css/header_button.css',
+            'smileliving/static/src/css/portal_listings.css',
             'smileliving/static/src/js/livechat_product_action.js',
             'smileliving/static/src/scss/loan_policy.scss',
             'smileliving/static/src/js/loan_calculator.js',
@@ -22,6 +24,9 @@
     'data': [
         'security/ir.model.access.csv',
         'data/smileliving_seed_cron.xml',
+        'views/header_custom_button.xml',
+        'views/property_submission_views.xml',
+        'views/portal_listings_templates.xml',
         'views/house_property_views.xml',
         'views/smileliving_reporting_views.xml',
         'views/smileliving_project_views.xml',

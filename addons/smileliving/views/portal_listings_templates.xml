@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_manage_listings" name="SmileLiving - Manage Listings">
+        <t t-call="website.layout">
+            <t t-set="title">Quản lý tin</t>
+            <div class="container my-4 o_smile_manage_page">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                    <div>
+                        <nav aria-label="breadcrumb" class="small">
+                            <ol class="breadcrumb mb-1">
+                                <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Quản lý tin</li>
+                            </ol>
+                        </nav>
+                        <h3 class="mb-0">Quản lý tin</h3>
+                    </div>
+
+                    <form class="d-flex gap-2" method="get" action="/smileliving/manage">
+                        <input type="hidden" name="status" t-att-value="status"/>
+                        <div class="input-group o_smile_search">
+                            <span class="input-group-text bg-white"><i class="fa fa-search"/></span>
+                            <input class="form-control" type="search" name="q" placeholder="Tìm tin đăng của bạn..." t-att-value="q"/>
+                        </div>
+                        <a class="btn btn-dark o_smile_cta_inline" href="/smileliving/submit">Đăng tin</a>
+                    </form>
+                </div>
+
+                <div class="o_smile_tabs card border-0 shadow-sm mb-3">
+                    <div class="card-body py-2">
+                        <div class="d-flex flex-wrap gap-2">
+                            <a t-attf-class="o_smile_tab btn btn-sm {{ 'btn-warning' if status == 'published' else 'btn-outline-secondary' }}" href="/smileliving/manage?status=published">
+                                ĐANG HIỂN THỊ (<t t-esc="counts.get('published', 0)"/>)
+                            </a>
+                            <a t-attf-class="o_smile_tab btn btn-sm {{ 'btn-warning' if status == 'pending' else 'btn-outline-secondary' }}" href="/smileliving/manage?status=pending">
+                                CHỜ DUYỆT (<t t-esc="counts.get('pending', 0)"/>)
+                            </a>
+                            <a t-attf-class="o_smile_tab btn btn-sm {{ 'btn-warning' if status == 'rejected' else 'btn-outline-secondary' }}" href="/smileliving/manage?status=rejected">
+                                BỊ TỪ CHỐI (<t t-esc="counts.get('rejected', 0)"/>)
+                            </a>
+                            <a t-attf-class="o_smile_tab btn btn-sm {{ 'btn-warning' if status == 'draft' else 'btn-outline-secondary' }}" href="/smileliving/manage?status=draft">
+                                TIN NHÁP (<t t-esc="counts.get('draft', 0)"/>)
+                            </a>
+                            <a t-attf-class="o_smile_tab btn btn-sm {{ 'btn-warning' if status == 'approved_hidden' else 'btn-outline-secondary' }}" href="/smileliving/manage?status=approved_hidden">
+                                ĐÃ DUYỆT (ẨN) (<t t-esc="counts.get('approved_hidden', 0)"/>)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <t t-if="submissions">
+                    <div class="row g-3">
+                        <t t-foreach="submissions" t-as="s">
+                            <div class="col-12 col-md-6 col-lg-4">
+                                <div class="card h-100 shadow-sm border-0 o_smile_listing_card">
+                                    <t t-set="prop" t-value="s.related_property_id"/>
+                                    <t t-set="tmpl" t-value="prop and prop.product_tmpl_id or False"/>
+                                    <t t-set="img" t-value="(tmpl and tmpl.image_128 and '/web/image/product.template/%s/image_128' % tmpl.id) or ''"/>
+                                    <div class="o_smile_thumb" t-attf-style="background-image: url('{{ img }}');">
+                                        <span class="badge o_smile_badge" t-attf-class="badge o_smile_badge {{ 'bg-warning text-dark' if s.state in ('pending','reviewed') else ('bg-success' if s.state == 'approved' else ('bg-danger' if s.state == 'rejected' else 'bg-secondary')) }}">
+                                            <t t-esc="dict(s._fields['state'].selection).get(s.state)"/>
+                                        </span>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start gap-2">
+                                            <h6 class="card-title mb-1 text-truncate" t-att-title="s.name"><t t-esc="s.name"/></h6>
+                                            <t t-if="prop">
+                                                <span class="small text-muted" t-if="prop.is_publish">Hiển thị</span>
+                                                <span class="small text-muted" t-else="">Ẩn</span>
+                                            </t>
+                                        </div>
+                                        <div class="small text-muted mb-2">
+                                            <t t-if="s.type_sale == 'sale'">Mua bán</t>
+                                            <t t-else="">Cho thuê</t>
+                                            <t t-if="s.area"> • <t t-esc="('%.2f' % s.area)"/> m²</t>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="fw-semibold">
+                                                <t t-if="s.price"><t t-esc="('{:,.0f}'.format(s.price)).replace(',', '.')"/> <t t-esc="s.currency_id and s.currency_id.name or ''"/></t>
+                                                <t t-else="">—</t>
+                                            </div>
+                                            <t t-if="tmpl and getattr(tmpl, 'website_url', False)">
+                                                <a class="btn btn-sm btn-outline-dark" t-att-href="tmpl.website_url">Xem</a>
+                                            </t>
+                                            <t t-else="">
+                                                <span class="small text-muted">Chưa công khai</span>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center py-5">
+                            <div class="display-6 mb-2">Không tìm thấy tin đăng</div>
+                            <div class="text-muted mb-3">Bạn hiện tại không có tin đăng nào cho trạng thái này</div>
+                            <a class="btn btn-dark" href="/smileliving/submit">Tạo tin mới</a>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_submit_listing" name="SmileLiving - Submit Listing">
+        <t t-call="website.layout">
+            <t t-set="title">Đăng tin</t>
+            <div class="container my-4 o_smile_submit_page">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <div>
+                        <nav aria-label="breadcrumb" class="small">
+                            <ol class="breadcrumb mb-1">
+                                <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                                <li class="breadcrumb-item"><a href="/smileliving/manage">Quản lý tin</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Đăng tin</li>
+                            </ol>
+                        </nav>
+                        <h3 class="mb-0">Đăng tin bất động sản</h3>
+                    </div>
+                    <a class="btn btn-outline-dark" href="/smileliving/manage?status=pending">Xem tin của tôi</a>
+                </div>
+
+                <t t-if="error">
+                    <div class="alert alert-danger" role="alert"><t t-esc="error"/></div>
+                </t>
+
+                <form class="card border-0 shadow-sm" method="post" enctype="multipart/form-data" action="/smileliving/submit">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">Tiêu đề</label>
+                                <input class="form-control" name="name" required="required" placeholder="VD: Căn hộ 2PN Quận 7, giá tốt" t-att-value="values.get('name')"/>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <label class="form-label">Hình thức</label>
+                                <select class="form-select" name="type_sale">
+                                    <option value="sale" t-att-selected="(values.get('type_sale') or 'sale') == 'sale'">Mua bán</option>
+                                    <option value="rent" t-att-selected="(values.get('type_sale') or 'sale') == 'rent'">Cho thuê</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <label class="form-label">Loại bất động sản</label>
+                                <select class="form-select" name="type_id">
+                                    <option value="">-- Chọn loại --</option>
+                                    <t t-foreach="types" t-as="t">
+                                        <option t-att-value="t.id" t-att-selected="str(values.get('type_id') or '') == str(t.id)">
+                                            <t t-esc="t.name"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <label class="form-label">Diện tích (m²)</label>
+                                <input class="form-control" type="number" step="0.01" min="0" name="area" placeholder="VD: 75" t-att-value="values.get('area')"/>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">Giá</label>
+                                <input class="form-control" type="number" step="0.01" min="0" name="price" placeholder="VD: 3200000000" t-att-value="values.get('price')"/>
+                                <div class="form-text">Đơn vị theo công ty (VND).</div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">Thông tin liên hệ</label>
+                                <input class="form-control" name="contact_info" placeholder="SĐT | Email" t-att-value="values.get('contact_info') or contact_info"/>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Mô tả</label>
+                                <textarea class="form-control" name="description" rows="4" placeholder="Mô tả chi tiết, tiện ích, pháp lý..."><t t-esc="values.get('description') or ''"/></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Hình ảnh / tài liệu (có thể chọn nhiều file)</label>
+                                <input class="form-control" type="file" name="attachments" multiple="multiple" accept="image/*,application/pdf"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white d-flex justify-content-end gap-2">
+                        <a class="btn btn-outline-secondary" href="/smileliving/manage">Hủy</a>
+                        <button type="submit" class="btn btn-dark">Gửi duyệt</button>
+                    </div>
+                </form>
+            </div>
+        </t>
+    </template>
+</odoo>

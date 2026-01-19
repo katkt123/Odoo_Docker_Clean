@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="smileliving_header_add_cta" inherit_id="website.template_header_default" name="SmileLiving Header CTA">
+        <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
+            <div class="o_smile_header_cta d-flex align-items-center">
+                <a href="/smileliving/manage" class="btn o_smile_manage_button d-flex align-items-center me-2" role="button">
+                    <span>Quản lý tin</span>
+                </a>
+                <a href="/smileliving/submit" class="btn o_smile_cta_button d-flex align-items-center" role="button">
+                    <span>Đăng tin</span>
+                </a>
+            </div>
+        </xpath>
+    </template>
+</odoo>
