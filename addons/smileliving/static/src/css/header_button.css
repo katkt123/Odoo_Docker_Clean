@@ -12,6 +12,20 @@
   text-decoration: none;
 }
 
+.o_smile_map_button{
+  background-color: #0b0b0b;
+  color: #ffffff;
+  padding: 8px 14px;
+  border-radius: 24px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.o_smile_map_button:hover{
+  background-color: #111111;
+  color: #ffffff;
+  text-decoration: none;
+}
+
 .o_smile_manage_button{
   background-color: #ffffff;
   color: #222222;

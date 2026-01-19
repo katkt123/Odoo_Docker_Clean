@@ -142,3 +142,49 @@ class SmileLivingPortalListings(http.Controller):
             pass
 
         return request.redirect('/smileliving/manage?status=pending')
+
+    @http.route(['/smileliving/map'], type='http', auth='public', website=True, sitemap=False)
+    def map_view(self, **kw):
+        return request.render('smileliving.portal_map', {})
+
+    @http.route(['/smileliving/map_data'], type='json', auth='public', website=True)
+    def map_data(self, **kw):
+        Property = request.env['smileliving.property'].sudo()
+        props = Property.search([('product_tmpl_id', '!=', False)])
+        features = []
+        for p in props:
+            try:
+                lat = float(p.latitude or 0.0)
+                lon = float(p.longitude or 0.0)
+            except Exception:
+                continue
+            if not lat or not lon:
+                continue
+            thumb = ''
+            try:
+                thumb = request.env['ir.http'].sudo().image_url(p, 'product_image_1920') or ''
+            except Exception:
+                thumb = ''
+            price = 0.0
+            try:
+                price = float(getattr(p, 'price_vnd', 0.0) or (p.product_tmpl_id and p.product_tmpl_id.list_price) or 0.0)
+            except Exception:
+                price = 0.0
+            url = '/smileliving/manage'
+            try:
+                if p.product_tmpl_id and getattr(p.product_tmpl_id, 'website_url', False):
+                    url = p.product_tmpl_id.website_url
+            except Exception:
+                pass
+            features.append({
+                'type': 'Feature',
+                'geometry': {'type': 'Point', 'coordinates': [lon, lat]},
+                'properties': {
+                    'id': p.id,
+                    'title': p.name,
+                    'price': price,
+                    'thumb': thumb,
+                    'url': url,
+                }
+            })
+        return {'type': 'FeatureCollection', 'features': features}

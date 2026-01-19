@@ -183,4 +183,32 @@
             </div>
         </t>
     </template>
+
+    <template id="portal_map" name="SmileLiving - Map">
+        <t t-call="website.layout">
+            <t t-set="title">Tìm nhà trên bản đồ</t>
+            <div class="container my-4 o_smile_map_page">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <nav aria-label="breadcrumb" class="small">
+                            <ol class="breadcrumb mb-1">
+                                <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Tìm nhà trên bản đồ</li>
+                            </ol>
+                        </nav>
+                        <h3 class="mb-0">Tìm nhà trên bản đồ</h3>
+                    </div>
+                    <div>
+                        <a class="btn btn-outline-dark" href="/smileliving/manage">Quay về Quản lý tin</a>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-0">
+                        <div id="smile_map" style="height:640px; width:100%;"></div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
 </odoo>

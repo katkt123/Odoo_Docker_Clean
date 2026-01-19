@@ -1,7 +1,7 @@
-# --- Odoo / Postgres runtime data (NEVER commit) ---
-postgres_data/
-odoo_data/
-data/odoo-data/
+# --- Odoo / Postgres runtime data (UNCOMMENT to commit DB; not recommended) ---
+# postgres_data/
+# odoo_data/
+# data/odoo-data/
 
 # Odoo / Python caches
 **/__pycache__/
