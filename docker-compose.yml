@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   db:
-    image: postgres:15                # hoặc phiên bản bạn chọn
+    image: postgres:18                # hoặc phiên bản bạn chọn
     container_name: odoo19-db-clean
     environment:
       - POSTGRES_USER=odoo
