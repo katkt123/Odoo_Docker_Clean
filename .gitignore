@@ -16,6 +16,10 @@ odoo_data/
 # Don't commit local Odoo config
 config/odoo.conf
 
+# Ignore YAML files (docker-compose, other local ymls)
+*.yml
+*.yaml
+
 # OS
 Thumbs.db
 .DS_Store
