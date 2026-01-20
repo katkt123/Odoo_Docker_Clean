@@ -4,12 +4,15 @@
         <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
             <div class="o_smile_header_cta d-flex align-items-center">
                 <a href="/smileliving/map" class="btn o_smile_map_button d-flex align-items-center me-2" role="button">
-                    <span>Tìm nhà trên bản đồ</span>
+                    <i class="fa fa-map-marker me-2" aria-hidden="true"/>
+                    <span>Tìm nhà</span>
                 </a>
                 <a href="/smileliving/manage" class="btn o_smile_manage_button d-flex align-items-center me-2" role="button">
+                    <i class="fa fa-list-alt me-2" aria-hidden="true"/>
                     <span>Quản lý tin</span>
                 </a>
                 <a href="/smileliving/submit" class="btn o_smile_cta_button d-flex align-items-center" role="button">
+                    <i class="fa fa-plus-circle me-2" aria-hidden="true"/>
                     <span>Đăng tin</span>
                 </a>
             </div>

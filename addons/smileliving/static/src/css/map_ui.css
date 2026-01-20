@@ -1,0 +1,185 @@
+.o_smile_map_wrap{
+  position: relative;
+  --smile-map-gutter: 16px;
+  --smile-sidebar-w: 360px;
+}
+
+/* Sidebar */
+.o_smile_map_sidebar{
+  position: absolute;
+  top: var(--smile-map-gutter);
+  left: var(--smile-map-gutter);
+  width: var(--smile-sidebar-w);
+  max-width: calc(100% - (var(--smile-map-gutter) * 2));
+  max-height: calc(100% - (var(--smile-map-gutter) * 2));
+  overflow: auto;
+  background: rgba(15, 23, 42, 0.86);
+  color: #e5e7eb;
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 14px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.28);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 14px;
+  z-index: 500; /* under leaflet controls (usually 1000+) but above map */
+  transform: translateX(0);
+  transition: transform .22s ease;
+}
+
+.o_smile_map_sidebar.is-collapsed{
+  transform: translateX(calc(-100% - 12px));
+  pointer-events: none;
+}
+
+.o_smile_map_sidebar_header{
+  margin-bottom: 12px;
+}
+
+.o_smile_map_sidebar_title{
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  font-size: 14px;
+  color: #f8fafc;
+}
+
+.o_smile_map_sidebar_subtitle{
+  font-size: 12px;
+  color: rgba(229,231,235,0.78);
+}
+
+.o_smile_map_search .input-group-text{
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.92);
+}
+
+.o_smile_map_search .form-control{
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: #f8fafc;
+}
+
+.o_smile_map_search .form-control::placeholder{
+  color: rgba(229,231,235,0.70);
+}
+
+.o_smile_map_search .btn{
+  border-radius: 10px;
+}
+
+.o_smile_map_search .btn-primary{
+  background: linear-gradient(135deg, #3b82f6, #06b6d4);
+  border: none;
+}
+
+.o_smile_map_search .btn-outline-secondary{
+  border-color: rgba(255,255,255,0.22);
+  color: rgba(255,255,255,0.90);
+}
+
+.o_smile_map_hint{
+  margin-top: 8px;
+  font-size: 12px;
+  color: rgba(229,231,235,0.70);
+}
+
+.o_smile_map_section{
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.10);
+}
+
+.o_smile_map_section_title{
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(248,250,252,0.92);
+  margin-bottom: 8px;
+}
+
+.o_smile_map_toggle{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  margin-bottom: 8px;
+}
+
+.o_smile_map_toggle input{
+  width: 16px;
+  height: 16px;
+}
+
+.o_smile_map_toggle span{
+  font-size: 13px;
+  color: rgba(248,250,252,0.92);
+}
+
+.o_smile_map_stats{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.o_smile_stat{
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.o_smile_stat_label{
+  font-size: 12px;
+  color: rgba(229,231,235,0.72);
+}
+
+.o_smile_stat_value{
+  font-size: 14px;
+  font-weight: 800;
+  color: #f8fafc;
+  margin-top: 2px;
+}
+
+/* Sidebar toggle */
+.o_smile_map_sidebar_toggle{
+  position: absolute;
+  top: 50%;
+  left: calc(var(--smile-map-gutter) + var(--smile-sidebar-w) - 12px);
+  transform: translateY(-50%);
+  width: 36px;
+  height: 64px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(15, 23, 42, 0.86);
+  color: rgba(255,255,255,0.92);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.22);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 510;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.o_smile_map_sidebar_toggle:hover{
+  background: rgba(15, 23, 42, 0.92);
+}
+
+.o_smile_map_wrap.is-sidebar-collapsed .o_smile_map_sidebar_toggle{
+  left: var(--smile-map-gutter);
+}
+
+/* Responsive: collapse sidebar */
+@media (max-width: 992px){
+  .o_smile_map_sidebar{
+    width: min(360px, calc(100% - 32px));
+  }
+  .o_smile_map_wrap{
+    --smile-sidebar-w: min(360px, calc(100% - 32px));
+  }
+}

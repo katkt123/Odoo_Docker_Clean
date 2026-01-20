@@ -203,9 +203,67 @@
                     </div>
                 </div>
 
-                <div class="card border-0 shadow-sm">
+                <div class="card border-0 shadow-sm o_smile_map_card">
                     <div class="card-body p-0">
-                        <div id="smile_map" style="height:640px; width:100%;"></div>
+                        <div class="o_smile_map_wrap">
+                            <div id="smile_map" style="height:640px; width:100%;"></div>
+
+                            <button type="button" class="o_smile_map_sidebar_toggle" id="smile_map_sidebar_toggle" aria-label="Ẩn/Hiện bảng điều khiển">
+                                &lt;
+                            </button>
+
+                            <aside class="o_smile_map_sidebar" id="smile_map_sidebar">
+                                <div class="o_smile_map_sidebar_header">
+                                    <div class="o_smile_map_sidebar_title">SMART PROPERTY GIS</div>
+                                    <div class="o_smile_map_sidebar_subtitle">Tìm kiếm &amp; phân tích nhanh trên bản đồ</div>
+                                </div>
+
+                                <div class="o_smile_map_search">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fa fa-search" aria-hidden="true"/></span>
+                                        <input id="smile_map_search_q" class="form-control" type="search" placeholder="Tìm: Quận 6, Quận 7, TP.HCM..." autocomplete="off"/>
+                                        <button id="smile_map_search_btn" class="btn btn-primary" type="button">Tìm</button>
+                                        <button id="smile_map_reset_btn" class="btn btn-outline-secondary" type="button">Tất cả</button>
+                                    </div>
+                                    <div class="o_smile_map_hint" id="smile_map_hint">Mẹo: Bạn có thể gõ “Quận 6” để lấy ranh giới (polygon) nếu có.</div>
+                                </div>
+
+                                <div class="o_smile_map_section">
+                                    <div class="o_smile_map_section_title">Lớp hiển thị</div>
+                                    <label class="o_smile_map_toggle">
+                                        <input type="checkbox" id="smile_layer_zoning" disabled="disabled"/>
+                                        <span>Quy hoạch (sắp có)</span>
+                                    </label>
+                                    <label class="o_smile_map_toggle">
+                                        <input type="checkbox" id="smile_layer_heat" disabled="disabled"/>
+                                        <span>Heatmap (sắp có)</span>
+                                    </label>
+                                </div>
+
+                                <div class="o_smile_map_section">
+                                    <div class="o_smile_map_section_title">Tổng quan vùng đang xem</div>
+                                    <div class="o_smile_map_stats">
+                                        <div class="o_smile_stat">
+                                            <div class="o_smile_stat_label">Số tin</div>
+                                            <div class="o_smile_stat_value" data-smile-stat="count">0</div>
+                                        </div>
+                                        <div class="o_smile_stat">
+                                            <div class="o_smile_stat_label">Giá TB</div>
+                                            <div class="o_smile_stat_value" data-smile-stat="avg_price">—</div>
+                                        </div>
+                                        <div class="o_smile_stat">
+                                            <div class="o_smile_stat_label">Giá min</div>
+                                            <div class="o_smile_stat_value" data-smile-stat="min_price">—</div>
+                                        </div>
+                                        <div class="o_smile_stat">
+                                            <div class="o_smile_stat_label">Giá max</div>
+                                            <div class="o_smile_stat_value" data-smile-stat="max_price">—</div>
+                                        </div>
+                                    </div>
+                                    <div class="o_smile_map_hint">Các chỉ số này tính theo các marker đang hiển thị.</div>
+                                </div>
+                            </aside>
+                        </div>
                     </div>
                 </div>
             </div>

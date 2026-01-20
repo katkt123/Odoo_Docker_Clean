@@ -10,6 +10,7 @@
             'smileliving/static/src/css/website.css',
             'smileliving/static/src/css/header_button.css',
             'smileliving/static/src/css/portal_listings.css',
+            'smileliving/static/src/css/map_ui.css',
             'https://unpkg.com/leaflet@1.9.3/dist/leaflet.css',
             'smileliving/static/src/js/livechat_product_action.js',
             'smileliving/static/src/scss/loan_policy.scss',

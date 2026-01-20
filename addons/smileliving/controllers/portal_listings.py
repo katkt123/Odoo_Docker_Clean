@@ -2,7 +2,7 @@
 
 import base64
 
-from odoo import http
+from odoo import http, fields
 from odoo.http import request
 
 
@@ -111,30 +111,71 @@ class SmileLivingPortalListings(http.Controller):
             'description': (post.get('description') or '').strip(),
             'uploader_id': request.env.user.id,
             'state': 'pending',
-            'submitted_at': request.env['ir.fields.converter'].to_datetime(post.get('submitted_at')) if post.get('submitted_at') else None,
+            'submitted_at': post.get('submitted_at') or fields.Datetime.now(),
         }
-        if not vals['submitted_at']:
-            vals['submitted_at'] = request.env['ir.fields'].Datetime.now()
 
-        submission = Submission.create(vals)
+        try:
+            # Create submission as sudo to avoid portal permission issues,
+            # but keep uploader_id as the real user.
+            submission = Submission.sudo().create(vals)
+            # Log success so we can trace submissions from website in logs
+            try:
+                request.env['ir.logging'].sudo().create({
+                    'name': 'smileliving.submit_success',
+                    'type': 'server',
+                    'level': 'INFO',
+                    'dbname': request.cr.dbname,
+                    'message': 'Created submission id=%s uploader=%s' % (submission.id, vals.get('uploader_id')),
+                    'path': 'smileliving.controllers.portal_listings',
+                })
+            except Exception:
+                pass
+        except Exception as e:
+            _logger = request.env['ir.logging']
+            try:
+                _logger.sudo().create({
+                    'name': 'smileliving.submit_error',
+                    'type': 'server',
+                    'level': 'ERROR',
+                    'dbname': request.cr.dbname,
+                    'message': 'Failed creating submission: %s' % (str(e),),
+                    'path': 'smileliving.controllers.portal_listings',
+                })
+            except Exception:
+                pass
+            return self.submit_listing_form(error='Lỗi nội bộ, không thể tạo đơn. Vui lòng thử lại.', **post)
 
-        # Attach uploaded files
+        # Attach uploaded files (create as sudo and ensure base64 string)
         files = request.httprequest.files.getlist('attachments')
         if files:
             Attachment = request.env['ir.attachment'].sudo()
             for f in files:
                 if not f or not getattr(f, 'filename', None):
                     continue
-                content = f.read()
-                if not content:
-                    continue
-                Attachment.create({
-                    'name': f.filename,
-                    'datas': base64.b64encode(content),
-                    'res_model': 'smileliving.property.submission',
-                    'res_id': submission.id,
-                    'mimetype': getattr(f, 'mimetype', None),
-                })
+                try:
+                    content = f.read()
+                    if not content:
+                        continue
+                    Attachment.create({
+                        'name': f.filename,
+                        'datas': base64.b64encode(content).decode('utf-8') if isinstance(base64.b64encode(content), bytes) else base64.b64encode(content),
+                        'res_model': 'smileliving.property.submission',
+                        'res_id': submission.id,
+                        'mimetype': getattr(f, 'mimetype', None),
+                    })
+                except Exception as e:
+                    # log attachment errors but continue
+                    try:
+                        request.env['ir.logging'].sudo().create({
+                            'name': 'smileliving.attachment_error',
+                            'type': 'server',
+                            'level': 'WARNING',
+                            'dbname': request.cr.dbname,
+                            'message': 'Attachment save failed: %s' % (str(e),),
+                            'path': 'smileliving.controllers.portal_listings',
+                        })
+                    except Exception:
+                        pass
 
         try:
             submission.message_post(body='User submitted from website.')

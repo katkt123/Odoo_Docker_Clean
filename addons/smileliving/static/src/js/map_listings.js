@@ -162,48 +162,112 @@ odoo.define('smileliving.map_listings', [], function (require) {
             visibleLayer.clearLayers();
             markerList.forEach(function(m){ visibleLayer.addLayer(m); });
             if (currentRect) { try { map.removeLayer(currentRect); } catch(e){} currentRect = null; }
+            if (currentPolygonLayer) { try { map.removeLayer(currentPolygonLayer); } catch(e){} currentPolygonLayer = null; }
+            updateStats();
         }
 
         function filterMarkersByBounds(bounds){
             visibleLayer.clearLayers();
             markerList.forEach(function(m){ try{ if (bounds.contains(m.getLatLng())){ visibleLayer.addLayer(m); } }catch(e){} });
+            updateStats();
         }
 
-        // Add simple search control (uses Nominatim) to zoom into a city/district
-        var SearchControl = L.Control.extend({
-            options: { position: 'topright' },
-            onAdd: function () {
-                var container = L.DomUtil.create('div', 'smile-search-control');
-                container.style.background = 'white';
-                container.style.padding = '6px';
-                container.style.borderRadius = '6px';
-                container.style.boxShadow = '0 1px 4px rgba(0,0,0,0.2)';
+        function formatMoney(val){
+            if (val === null || val === undefined || val === '' || isNaN(val)) { return '—'; }
+            try { return Number(val).toLocaleString('vi-VN'); } catch (e) { return String(val); }
+        }
 
-                var input = L.DomUtil.create('input', '', container);
-                input.type = 'search';
-                input.placeholder = 'Tìm: Quận 7, TP Hồ Chí Minh...';
-                input.style.width = '180px';
-                input.style.marginRight = '6px';
+        function getVisibleMarkers(){
+            try {
+                if (visibleLayer && typeof visibleLayer.getLayers === 'function') {
+                    return visibleLayer.getLayers();
+                }
+            } catch (e) {}
+            return markerList;
+        }
 
-                var btn = L.DomUtil.create('button', '', container);
-                btn.innerText = 'Tìm';
-                btn.style.cursor = 'pointer';
+        function updateStats(){
+            var root = document.getElementById('smile_map_sidebar');
+            if (!root) { return; }
+            var markers = getVisibleMarkers();
+            var count = markers.length;
+            var prices = [];
+            markers.forEach(function(m){
+                try {
+                    var p = m._props || {};
+                    var price = p.price;
+                    if (price !== null && price !== undefined && price !== '' && !isNaN(price)) {
+                        prices.push(Number(price));
+                    }
+                } catch (e) {}
+            });
+            var minPrice = prices.length ? Math.min.apply(null, prices) : null;
+            var maxPrice = prices.length ? Math.max.apply(null, prices) : null;
+            var avgPrice = prices.length ? (prices.reduce(function(a,b){return a+b;}, 0) / prices.length) : null;
 
-                var reset = L.DomUtil.create('button', '', container);
-                reset.innerText = 'Tất cả';
-                reset.style.marginLeft = '6px';
-                reset.style.cursor = 'pointer';
+            var elCount = root.querySelector('[data-smile-stat="count"]');
+            var elAvg = root.querySelector('[data-smile-stat="avg_price"]');
+            var elMin = root.querySelector('[data-smile-stat="min_price"]');
+            var elMax = root.querySelector('[data-smile-stat="max_price"]');
+            if (elCount) { elCount.textContent = String(count); }
+            if (elAvg) { elAvg.textContent = formatMoney(avgPrice); }
+            if (elMin) { elMin.textContent = formatMoney(minPrice); }
+            if (elMax) { elMax.textContent = formatMoney(maxPrice); }
+        }
 
-                L.DomEvent.disableClickPropagation(container);
-
-                btn.addEventListener('click', function () { doSearch(input.value); });
-                input.addEventListener('keyup', function (ev) { if (ev.key === 'Enter') { doSearch(input.value); } });
-                reset.addEventListener('click', function () { showAllMarkers(); try { map.fitBounds(allMarkersGroup.getBounds(), {padding:[40,40]}); } catch(e){} });
-
-                return container;
+        // Bind overlay UI (sidebar) if present
+        (function bindOverlayUI(){
+            var toggleBtn = document.getElementById('smile_map_sidebar_toggle');
+            var sidebar = document.getElementById('smile_map_sidebar');
+            var wrap = null;
+            if (sidebar && typeof sidebar.closest === 'function') {
+                wrap = sidebar.closest('.o_smile_map_wrap');
             }
-        });
-        map.addControl(new SearchControl());
+
+            function applyCollapsedState(isCollapsed){
+                if (!sidebar || !toggleBtn) { return; }
+                sidebar.classList.toggle('is-collapsed', !!isCollapsed);
+                if (wrap) {
+                    wrap.classList.toggle('is-sidebar-collapsed', !!isCollapsed);
+                }
+                // '<' when open, '>' when collapsed
+                toggleBtn.textContent = isCollapsed ? '>' : '<';
+                toggleBtn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+                sidebar.setAttribute('aria-hidden', isCollapsed ? 'true' : 'false');
+                try {
+                    window.localStorage.setItem('smile_map_sidebar_collapsed', isCollapsed ? '1' : '0');
+                } catch (e) {}
+                // Leaflet needs a size invalidation after layout changes
+                setTimeout(function(){
+                    try { map.invalidateSize(); } catch (e) {}
+                }, 260);
+            }
+
+            if (toggleBtn && sidebar) {
+                var initiallyCollapsed = false;
+                try {
+                    initiallyCollapsed = window.localStorage.getItem('smile_map_sidebar_collapsed') === '1';
+                } catch (e) {}
+                applyCollapsedState(initiallyCollapsed);
+                toggleBtn.addEventListener('click', function(){
+                    applyCollapsedState(!sidebar.classList.contains('is-collapsed'));
+                });
+            }
+            var searchInput = document.getElementById('smile_map_search_q');
+            var searchBtn = document.getElementById('smile_map_search_btn');
+            var resetBtn = document.getElementById('smile_map_reset_btn');
+            if (searchBtn && searchInput) {
+                searchBtn.addEventListener('click', function(){ doSearch(searchInput.value); });
+                searchInput.addEventListener('keyup', function(ev){ if (ev.key === 'Enter') { doSearch(searchInput.value); } });
+            }
+            if (resetBtn) {
+                resetBtn.addEventListener('click', function(){
+                    showAllMarkers();
+                    try { map.fitBounds(allMarkersGroup.getBounds(), {padding:[40,40]}); } catch(e){}
+                    if (searchInput) { searchInput.value = ''; }
+                });
+            }
+        })();
         // fetch GeoJSON (API trả về JSON)
         try {
             var resp = await fetch('/smileliving/map_data', { credentials: 'same-origin', headers: {'Accept': 'application/json'} });
@@ -231,7 +295,7 @@ odoo.define('smileliving.map_listings', [], function (require) {
                 var props = f.properties || {};
                 var icon = L.icon({
                     // Use module static path (file is at addons/smileliving/static/img/marker.png)
-                    iconUrl: '/smileliving/static/img/marker.png',
+                    iconUrl: '/smileliving/static/img/house.png',
                     iconSize: [30, 30],
                     iconAnchor: [15, 30],
                 });
@@ -290,6 +354,7 @@ odoo.define('smileliving.map_listings', [], function (require) {
             // Initially show all markers
             markerList.forEach(function(m){ visibleLayer.addLayer(m); });
             try { map.fitBounds(visibleLayer.getBounds(), {padding: [40,40]}); } catch (e) {}
+            updateStats();
 
         } catch (err) {
             console.error('Failed to load map data', err);
