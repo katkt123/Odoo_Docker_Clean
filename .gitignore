@@ -13,6 +13,9 @@ odoo_data/
 .history/
 .vscode/
 
+# Don't commit local Odoo config
+config/odoo.conf
+
 # OS
 Thumbs.db
 .DS_Store

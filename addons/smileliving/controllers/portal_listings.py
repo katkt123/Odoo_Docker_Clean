@@ -147,10 +147,25 @@ class SmileLivingPortalListings(http.Controller):
     def map_view(self, **kw):
         return request.render('smileliving.portal_map', {})
 
-    @http.route(['/smileliving/map_data'], type='json', auth='public', website=True)
+    @http.route(['/smileliving/map_data'], type='http', auth='public', website=True, csrf=False)
     def map_data(self, **kw):
         Property = request.env['smileliving.property'].sudo()
-        props = Property.search([('product_tmpl_id', '!=', False)])
+        ProductTmpl = request.env['product.template'].sudo()
+        # Determine which publish flag exists on product.template (is_published or website_published)
+        publish_field = None
+        if 'is_published' in ProductTmpl._fields:
+            publish_field = 'is_published'
+        elif 'website_published' in ProductTmpl._fields:
+            publish_field = 'website_published'
+
+        # If product.template exposes a publish field, filter properties by that field
+        if publish_field:
+            domain = [('product_tmpl_id', '!=', False), (f'product_tmpl_id.{publish_field}', '=', True)]
+        else:
+            # Fallback: include all properties linked to a product template
+            domain = [('product_tmpl_id', '!=', False)]
+
+        props = Property.search(domain)
         features = []
         for p in props:
             try:
@@ -187,4 +202,4 @@ class SmileLivingPortalListings(http.Controller):
                     'url': url,
                 }
             })
-        return {'type': 'FeatureCollection', 'features': features}
+        return request.make_json_response({'type': 'FeatureCollection', 'features': features})
