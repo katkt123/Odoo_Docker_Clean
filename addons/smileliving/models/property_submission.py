@@ -15,6 +15,8 @@ class SmileLivingPropertySubmission(models.Model):
     type_id = fields.Many2one('smileliving.type', string='Loại bất động sản')
     type_sale = fields.Selection([('sale','Mua bán'), ('rent','Cho thuê')], string='Hình thức', default='sale')
     area = fields.Float(string='Diện tích')
+    bedroom_count = fields.Integer(string='Phòng ngủ', default=0)
+    bathroom_count = fields.Integer(string='WC', default=0)
     description = fields.Text(string='Mô tả')
     state = fields.Selection([
         ('draft','Nháp'),
@@ -29,7 +31,38 @@ class SmileLivingPropertySubmission(models.Model):
     rejection_reason = fields.Text(string='Lý do từ chối')
 
     # Attachments: images/documents uploaded by user are stored in ir.attachment
-    attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Tệp đính kèm', domain=[('res_model', '=', 'smileliving.property.submission')])
+    # linked via (res_model, res_id). Expose them as a m2m so we can use
+    # standard widgets like many2many_binary in backend views.
+    attachment_ids = fields.Many2many(
+        'ir.attachment',
+        string='Tệp đính kèm',
+        compute='_compute_attachment_ids',
+        inverse='_inverse_attachment_ids',
+    )
+
+    def _compute_attachment_ids(self):
+        Attachment = self.env['ir.attachment'].sudo()
+        for rec in self:
+            if not rec.id:
+                rec.attachment_ids = False
+                continue
+            rec.attachment_ids = Attachment.search([
+                ('res_model', '=', 'smileliving.property.submission'),
+                ('res_id', '=', rec.id),
+            ])
+
+    def _inverse_attachment_ids(self):
+        Attachment = self.env['ir.attachment'].sudo()
+        for rec in self:
+            if not rec.id:
+                continue
+            current = Attachment.search([
+                ('res_model', '=', 'smileliving.property.submission'),
+                ('res_id', '=', rec.id),
+            ])
+            desired = rec.attachment_ids
+            (desired - current).write({'res_model': 'smileliving.property.submission', 'res_id': rec.id})
+            (current - desired).write({'res_model': False, 'res_id': 0})
 
     @api.model
     def _generate_product_code(self):
@@ -115,8 +148,11 @@ class SmileLivingPropertySubmission(models.Model):
                 'type_id': rec.type_id.id if rec.type_id else False,
                 'type_sale': rec.type_sale or 'sale',
                 'area': float(rec.area or 0.0),
+                'bedroom_count': int(rec.bedroom_count or 0),
+                'bathroom_count': int(rec.bathroom_count or 0),
                 'house_status': 'available',
                 'address': rec.name,
+                'description_detail': rec.description,
             }
             new_prop = Property.create(prop_vals)
 

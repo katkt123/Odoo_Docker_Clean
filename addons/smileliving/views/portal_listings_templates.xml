@@ -125,8 +125,10 @@
                 <t t-if="error">
                     <div class="alert alert-danger" role="alert"><t t-esc="error"/></div>
                 </t>
-
-                <form class="card border-0 shadow-sm" method="post" enctype="multipart/form-data" action="/smileliving/submit">
+                <!-- Inline feedback alert removed (kept SweetAlert2-based notification instead) -->
+                <t t-if="feedback">
+                </t>
+                <form class="card border-0 shadow-sm" method="post" enctype="multipart/form-data" action="/smileliving/submit/proptech">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <div class="card-body">
                         <div class="row g-3">
@@ -156,6 +158,14 @@
                                 <label class="form-label">Diện tích (m²)</label>
                                 <input class="form-control" type="number" step="0.01" min="0" name="area" placeholder="VD: 75" t-att-value="values.get('area')"/>
                             </div>
+                            <div class="col-12 col-md-4">
+                                <label class="form-label">Phòng ngủ</label>
+                                <input class="form-control" type="number" step="1" min="0" name="bedroom_count" placeholder="VD: 2" t-att-value="values.get('bedroom_count')"/>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <label class="form-label">WC</label>
+                                <input class="form-control" type="number" step="1" min="0" name="bathroom_count" placeholder="VD: 2" t-att-value="values.get('bathroom_count')"/>
+                            </div>
                             <div class="col-12 col-md-6">
                                 <label class="form-label">Giá</label>
                                 <input class="form-control" type="number" step="0.01" min="0" name="price" placeholder="VD: 3200000000" t-att-value="values.get('price')"/>
@@ -180,6 +190,47 @@
                         <button type="submit" class="btn btn-dark">Gửi duyệt</button>
                     </div>
                 </form>
+                 <div id="smile-submit-feedback" hidden="hidden"
+                     t-att-data-error="error or ''"
+                     t-att-data-feedback-type="feedback and feedback.get('type') or ''"
+                     t-att-data-feedback-text="feedback and feedback.get('text') or ''"
+                     t-att-data-feedback-details="feedback and feedback.get('details') or ''"
+                     class="d-none"></div>
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                <script type="text/javascript">
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const el = document.getElementById('smile-submit-feedback');
+                        if (!el) {
+                            return;
+                        }
+                        const error = el.dataset.error;
+                        const feedbackType = el.dataset.feedbackType;
+                        const feedbackText = el.dataset.feedbackText;
+                        const feedbackDetails = el.dataset.feedbackDetails;
+                        const clearQuery = () => {
+                            const cleanUrl = window.location.pathname + window.location.hash;
+                            window.history.replaceState({}, '', cleanUrl);
+                        };
+                        if (error) {
+                            Swal.fire({
+                                title: 'Lỗi',
+                                text: error,
+                                icon: 'error',
+                                customClass: {popup: 'shadow-lg'},
+                            }).then(clearQuery);
+                            return;
+                        }
+                        if (feedbackText) {
+                            Swal.fire({
+                                title: feedbackType === 'success' ? 'Thành công' : 'Thông báo',
+                                text: feedbackText,
+                                icon: feedbackType === 'success' ? 'success' : 'info',
+                                footer: feedbackDetails || '',
+                                customClass: {popup: 'shadow-lg'},
+                            }).then(clearQuery);
+                        }
+                    });
+                </script>
             </div>
         </t>
     </template>

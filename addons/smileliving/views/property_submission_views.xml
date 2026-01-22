@@ -17,6 +17,9 @@
         <list>
           <field name="name"/>
           <field name="uploader_id"/>
+          <field name="bedroom_count"/>
+          <field name="bathroom_count"/>
+          <field name="area"/>
           <field name="price"/>
           <field name="type_sale"/>
           <field name="state"/>
@@ -40,6 +43,8 @@
               <field name="type_sale"/>
               <field name="type_id"/>
               <field name="area"/>
+              <field name="bedroom_count"/>
+              <field name="bathroom_count"/>
             </group>
             <group>
               <field name="description"/>
