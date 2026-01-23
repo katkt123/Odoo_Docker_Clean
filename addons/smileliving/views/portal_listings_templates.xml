@@ -56,7 +56,7 @@
                                     <t t-set="tmpl" t-value="prop and prop.product_tmpl_id or False"/>
                                     <t t-set="img" t-value="(tmpl and tmpl.image_128 and '/web/image/product.template/%s/image_128' % tmpl.id) or ''"/>
                                     <div class="o_smile_thumb" t-attf-style="background-image: url('{{ img }}');">
-                                        <span class="badge o_smile_badge" t-attf-class="badge o_smile_badge {{ 'bg-warning text-dark' if s.state in ('pending','reviewed') else ('bg-success' if s.state == 'approved' else ('bg-danger' if s.state == 'rejected' else 'bg-secondary')) }}">
+                                        <span class="badge o_smile_badge" t-attf-class="badge o_smile_badge {{ 'bg-warning text-dark' if s.state == 'pending' else ('bg-success' if s.state == 'approved' else ('bg-danger' if s.state == 'rejected' else 'bg-secondary')) }}">
                                             <t t-esc="dict(s._fields['state'].selection).get(s.state)"/>
                                         </span>
                                     </div>
@@ -78,7 +78,7 @@
                                                 <t t-if="s.price"><t t-esc="('{:,.0f}'.format(s.price)).replace(',', '.')"/> <t t-esc="s.currency_id and s.currency_id.name or ''"/></t>
                                                 <t t-else="">—</t>
                                             </div>
-                                            <t t-if="tmpl and getattr(tmpl, 'website_url', False)">
+                                            <t t-if="tmpl and tmpl.website_url">
                                                 <a class="btn btn-sm btn-outline-dark" t-att-href="tmpl.website_url">Xem</a>
                                             </t>
                                             <t t-else="">

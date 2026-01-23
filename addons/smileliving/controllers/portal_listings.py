@@ -51,7 +51,7 @@ class SmileLivingPortalListings(http.Controller):
             if rec.state == 'draft':
                 counts['draft'] += 1
                 continue
-            if rec.state in ('pending', 'reviewed'):
+            if rec.state == 'pending':
                 counts['pending'] += 1
                 continue
             if rec.state == 'rejected':
@@ -72,7 +72,7 @@ class SmileLivingPortalListings(http.Controller):
         if status == 'draft':
             return submissions.filtered(lambda r: r.state == 'draft')
         if status == 'pending':
-            return submissions.filtered(lambda r: r.state in ('pending', 'reviewed'))
+            return submissions.filtered(lambda r: r.state == 'pending')
         if status == 'rejected':
             return submissions.filtered(lambda r: r.state == 'rejected')
         if status == 'published':

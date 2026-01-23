@@ -1,4 +1,5 @@
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class SmileLivingPropertySubmission(models.Model):
@@ -21,7 +22,6 @@ class SmileLivingPropertySubmission(models.Model):
     state = fields.Selection([
         ('draft','Nháp'),
         ('pending','Đang chờ'),
-        ('reviewed','Đã xem'),
         ('rejected','Bị từ chối'),
         ('approved','Đã duyệt'),
     ], string='Trạng thái', default='draft', index=True, tracking=True)
@@ -79,8 +79,14 @@ class SmileLivingPropertySubmission(models.Model):
             s = f"{seq_code}-{int(time.time())}"
         return s
 
+    def _ensure_in_state(self, allowed_states):
+        self.ensure_one()
+        if self.state not in allowed_states:
+            raise UserError(_('Hành động không hợp lệ ở trạng thái hiện tại.'))
+
     def action_submit(self):
         for rec in self:
+            rec._ensure_in_state(['draft'])
             rec.state = 'pending'
             rec.submitted_at = fields.Datetime.now()
             rec.message_post(body=_('Submission submitted for review'))
@@ -88,18 +94,23 @@ class SmileLivingPropertySubmission(models.Model):
 
     def action_reject(self, reason=None):
         for rec in self:
+            rec._ensure_in_state(['pending'])
             rec.state = 'rejected'
             rec.reviewed_by = self.env.uid
             rec.reviewed_at = fields.Datetime.now()
             if reason:
                 rec.rejection_reason = reason
             rec.message_post(body=_('Submission rejected: %s' % (rec.rejection_reason or _('No reason'))))
-        return True
+        # Force client reload so modifiers/buttons are refreshed
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
+
+    # 'reviewed' state removed — keep reviewed_by/reviewed_at fields for audit
 
     def action_approve_and_convert(self, publish=False):
         ProductTmpl = self.env['product.template'].sudo()
         Property = self.env['smileliving.property'].sudo()
         for rec in self:
+            rec._ensure_in_state(['pending'])
             # If already linked to a property/product, just mark approved
             if rec.related_property_id and rec.related_property_id.product_tmpl_id:
                 rec.state = 'approved'
@@ -161,4 +172,35 @@ class SmileLivingPropertySubmission(models.Model):
             rec.reviewed_by = self.env.uid
             rec.reviewed_at = fields.Datetime.now()
             rec.message_post(body=_('Submission approved and converted to product/property.'))
-        return True
+        # Force client reload so modifiers/buttons are refreshed
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
+
+    def action_open_reject_wizard(self):
+        self.ensure_one()
+        self._ensure_in_state(['pending'])
+        view = self.env.ref('smileliving.view_submission_reject_wizard_form')
+        return {
+            'name': _('Từ chối đơn'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'smileliving.submission.reject.wizard',
+            'view_mode': 'form',
+            'view_id': view.id,
+            'target': 'new',
+            'context': {'default_submission_id': self.id},
+        }
+
+
+class SmileLivingSubmissionRejectWizard(models.TransientModel):
+    _name = 'smileliving.submission.reject.wizard'
+    _description = 'Submission Rejection Wizard'
+
+    submission_id = fields.Many2one('smileliving.property.submission', string='Submission', required=True, ondelete='cascade')
+    reason = fields.Text(string='Lý do từ chối', required=True)
+
+    def action_confirm_reject(self):
+        self.ensure_one()
+        submission = self.submission_id
+        submission._ensure_in_state(['pending'])
+        # call server method to apply rejection and then reload client
+        res = submission.action_reject(self.reason)
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
