@@ -159,7 +159,7 @@
                         <t t-if="smile_property.description_detail">
                             <section class="py-4">
                                 <div class="container">
-                                    <h3 class="mb-3">Thông tin chi tiết</h3>
+                                    <h3 class="mb-3">Mô tả chi tiết</h3>
                                     <div class="text-body" style="white-space: pre-wrap;">
                                         <t t-esc="smile_property.description_detail"/>
                                     </div>

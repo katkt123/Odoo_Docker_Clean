@@ -6,3 +6,23 @@
 .sl-stat-label {font-size: 12px; color: #64748b;}
 .sl-stat-value {font-size: 18px; font-weight: 700;}
 .sl-description p {margin-bottom: .75rem;}
+
+/* Make property media images render horizontally with horizontal scroll */
+.o_website_sale_image_list {
+	display: flex;
+	gap: 0.75rem;
+	align-items: flex-start;
+	overflow-x: auto;
+	padding-bottom: 0.5rem;
+}
+.o_website_sale_image_list .o_kanban_record {
+	flex: 0 0 auto;
+}
+.o_website_sale_image_list img {
+	max-height: 220px;
+	width: auto;
+	object-fit: cover;
+	display: block;
+	border-radius: 8px;
+}
+

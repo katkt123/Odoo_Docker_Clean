@@ -9,6 +9,7 @@
             'smileliving/static/src/css/project.css',
             'smileliving/static/src/css/website.css',
             'smileliving/static/src/css/header_button.css',
+            'smileliving/static/src/css/button_loader.css',
             'smileliving/static/src/css/portal_listings.css',
             'smileliving/static/src/css/map_ui.css',
             'https://unpkg.com/leaflet@1.9.3/dist/leaflet.css',
@@ -20,6 +21,9 @@
         ],
         'web.assets_backend': [
             'smileliving/static/src/js/livechat_product_action.js',
+            'smileliving/static/src/js/button_loader.js',
+            'smileliving/static/src/css/button_loader.css',
+            'smileliving/static/src/css/project.css',
         ],
         'im_livechat.assets_embed': [
             'smileliving/static/src/js/livechat_product_action.js',

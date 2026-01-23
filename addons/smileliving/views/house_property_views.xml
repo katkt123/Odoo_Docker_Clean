@@ -45,51 +45,86 @@
                             </button>
                         </div>
 
-                        <group string="Hình ảnh">
-                            <field name="product_image_1920" widget="image" class="oe_avatar"/>
-                            <field
-                                name="product_template_image_ids"
-                                class="o_website_sale_image_list"
-                                domain="[('product_tmpl_id', '=', product_tmpl_id)]"
-                                context="{'default_product_tmpl_id': product_tmpl_id.id, 'default_name': product_tmpl_id.name}"
-                                mode="kanban"
-                                add-label="Add Media"
-                                nolabel="1"
-                                widget="x2_many_media_viewer"
-                                options="{'convert_to_webp': True}"
-                            />
-                        </group>
+                        <!-- Header: image left, large name right -->
+                        <div class="row" style="align-items:center; gap:1rem; margin-bottom:1rem;">
+                            <div class="col-3">
+                                <field name="product_image_1920" widget="image" style="width:160px; height:160px; object-fit:cover; border-radius:8px;"/>
+                            </div>
+                            <div class="col-9">
+                                <div style="font-size:28px; font-weight:700; line-height:1.1;">
+                                    <field name="name" nolabel="1" readonly="1"/>
+                                </div>
+                                <div style="color:#6b7280; margin-top:6px; font-size:14px;">
+                                    <field name="product_tmpl_id" readonly="1"/>
+                                </div>
+                            </div>
+                        </div>
 
-                        <group>
-                            <field name="product_tmpl_id"/>
-                            <field name="project_id"/>
-                            <field name="is_publish" widget="boolean_toggle"/>
-                            <field name="price_vnd" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                            <field name="account_invoiced_total" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
-                            <field name="account_due_total" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
-                            <field name="deposit_invoiced_total" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
-                            <field name="deposit_due_total" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
-                            <field name="accounting_state" readonly="1"/>
-                            <field name="type_id"/>
-                            <field name="type_sale"/>
-                            <field name="area"/>
-                            <field name="amenity_ids" widget="many2many_tags"/>
-                            <field name="house_status"/>
-                            <field name="address"/>
-                        </group>
+                        <notebook>
+                            <page string="Thông tin">
+                                <group>
+                                    <field name="product_tmpl_id"/>
+                                    <field name="project_id"/>
+                                    <field name="is_publish" widget="boolean_toggle"/>
+                                    <field name="price_vnd" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="type_id"/>
+                                    <field name="type_sale"/>
+                                    <field name="area"/>
+                                    <field name="amenity_ids" widget="many2many_tags"/>
+                                    <field name="house_status"/>
+                                </group>
+                                <group>
+                                    <!-- <label for="description_detail" string="Mô tả chi tiết"/> -->
+                                    <field name="description_detail"/>
+                                </group>
+                            </page>
 
-                        <group string="Địa lý">
-                            <field name="tinhthanh_id"/>
-                            <field name="quanhuyen_id" domain="[('tinhthanh_id', '=', tinhthanh_id)]"/>
-                            <field name="phuongxa_id" domain="[('quanhuyen_id', '=', quanhuyen_id)]"/>
-                            <field name="latitude"/>
-                            <field name="longitude"/>
-                        </group>
+                            <page string="Hình ảnh">
+                                <group>
+                                    <field name="product_image_1920" widget="image" class="oe_avatar"/>
+                                </group>
+                                <group>
+                                    <div style="display:flex; gap:0.75rem; align-items:flex-start; overflow-x:auto; padding-top:0.5rem;">
+                                        <field
+                                            name="product_template_image_ids"
+                                            class="o_website_sale_image_list"
+                                            domain="[('product_tmpl_id', '=', product_tmpl_id)]"
+                                            context="{'default_product_tmpl_id': product_tmpl_id.id, 'default_name': product_tmpl_id.name}"
+                                            mode="kanban"
+                                            add-label="Add Media"
+                                            nolabel="1"
+                                            widget="x2_many_media_viewer"
+                                            options="{'convert_to_webp': True}"
+                                        />
+                                    </div>
+                                </group>
+                            </page>
 
-                        <group string="Bản đồ">
-                            <field name="google_maps_url" readonly="1"/>
-                            <field name="google_maps_iframe" readonly="1"/>
-                        </group>
+                            <page string="Địa lý &amp; Bản đồ">
+                                <group>
+                                    <field name="address"/>
+                                    <field name="tinhthanh_id"/>
+                                    <field name="quanhuyen_id" domain="[('tinhthanh_id', '=', tinhthanh_id)]"/>
+                                    <field name="phuongxa_id" domain="[('quanhuyen_id', '=', quanhuyen_id)]"/>
+                                </group>
+                                <group>
+                                    <field name="latitude"/>
+                                    <field name="longitude"/>
+                                    <field name="google_maps_url" readonly="1"/>
+                                    <field name="google_maps_iframe" readonly="1"/>
+                                </group>
+                            </page>
+
+                            <page string="Kế toán">
+                                <group>
+                                    <field name="account_invoiced_total" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
+                                    <field name="account_due_total" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
+                                    <field name="deposit_invoiced_total" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
+                                    <field name="deposit_due_total" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
+                                    <field name="accounting_state" readonly="1"/>
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
