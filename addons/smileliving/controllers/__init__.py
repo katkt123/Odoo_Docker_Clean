@@ -5,4 +5,5 @@ from . import smileliving_wishlist
 from . import livechat_product
 from . import bank_policy
 from . import portal_listings
+from . import shop_override
 

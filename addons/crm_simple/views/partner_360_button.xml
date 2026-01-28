@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_crm_simple" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.crm_simple</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group name="crm_simple_top_actions" colspan="2">
+                    <button name="%(action_crm_simple_customer_360)d" type="action" string="Customer 360" class="btn-primary"/>
+                    <field name="x_is_guest" invisible="1"/>
+                </group>
+            </xpath>
+
+            <!-- Leads tab removed to avoid view validation issues; smart-button remains -->
+        </field>
+    </record>
+</odoo>

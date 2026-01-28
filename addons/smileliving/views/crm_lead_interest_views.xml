@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="crm.crm_lead_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//sheet//group[.//field[@name='partner_id']]" position="after">
-                    <group string="Bất động sản quan tâm" col="4">
+                    <group string="Bất động sản quan tâm" col="4" invisible="not smile_product_tmpl_id">
                         <field name="smile_product_image_128" widget="image" class="oe_avatar" options="{'preview_image': 'smile_product_image_128'}"/>
                         <field name="smile_product_tmpl_id"/>
                         <field name="smile_product_tmpl_dbid"/>

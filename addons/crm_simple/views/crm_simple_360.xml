@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action to open demo partner form as a quick Customer 360 demo -->
+    <record id="action_crm_simple_customer_360" model="ir.actions.act_window">
+        <field name="name">Customer 360 - Demo</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">form,list</field>
+        <field name="res_id" ref="demo_partner_company_a"/>
+        <field name="target">current</field>
+    </record>
+
+    <!-- Menu item under CRM Simple root -->
+    <menuitem id="menu_crm_simple_customer_360" name="Customer 360" parent="menu_crm_simple_root" action="action_crm_simple_customer_360" sequence="2"/>
+</odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Demo company customer -->
+    <record id="demo_partner_company_a" model="res.partner">
+        <field name="name">Demo Công ty A</field>
+        <field name="is_company">True</field>
+        <field name="phone">+84 123456789</field>
+        <field name="email">contact@demoa.com</field>
+        <field name="website">www.demoa.com</field>
+    </record>
+
+    <!-- Demo contact person -->
+    <record id="demo_partner_contact_b" model="res.partner">
+        <field name="name">Nguyễn Văn B</field>
+        <field name="parent_id" ref="demo_partner_company_a"/>
+        <field name="phone">+84 987654321</field>
+        <field name="email">nvb@demoa.com</field>
+    </record>
+
+    <!-- Demo CRM lead (used here as a simple ticket example) -->
+    <record id="demo_crm_lead_1" model="crm.lead">
+        <field name="name">Thanh toán lỗi</field>
+        <field name="partner_id" ref="demo_partner_company_a"/>
+        <field name="contact_name">Nguyễn Văn B</field>
+        <field name="type">lead</field>
+        <field name="priority">1</field>
+    </record>
+
+    <!-- Demo message attached to the lead (timeline) -->
+    <record id="demo_message_1" model="mail.message">
+        <field name="model">crm.lead</field>
+        <field name="res_id" ref="demo_crm_lead_1"/>
+        <field name="body">Khách báo lỗi khi thanh toán, yêu cầu hỗ trợ gấp.</field>
+        <field name="date">2026-01-26 08:00:00</field>
+    </record>
+</odoo>
