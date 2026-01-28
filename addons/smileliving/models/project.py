@@ -24,9 +24,8 @@ class SmileLivingProject(models.Model):
     status = fields.Selection(
         [
             ('planning', 'Đang lập kế hoạch'),
-            ('launch', 'Mở bán'),
             ('building', 'Đang xây dựng'),
-            ('handover', 'Bàn giao'),
+            ('launch', 'Mở bán'),
             ('soldout', 'Đã bán hết'),
         ],
         string='Trạng thái dự án',

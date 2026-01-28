@@ -7,6 +7,47 @@
 .sl-stat-value {font-size: 18px; font-weight: 700;}
 .sl-description p {margin-bottom: .75rem;}
 
+/* Project status badge colors (website) */
+.sl-status-badge {
+	border-radius: 999px;
+	padding: 0.4rem 0.75rem;
+	font-weight: 600;
+	letter-spacing: 0.2px;
+	border: 1px solid transparent;
+}
+
+/* planning: neutral */
+.badge.sl-status-planning,
+.sl-status-badge.sl-status-planning {
+	background-color: #6b7280 !important; /* gray */
+	border-color: #6b7280 !important;
+	color: #fff !important;
+}
+
+/* building: informative */
+.badge.sl-status-building,
+.sl-status-badge.sl-status-building {
+	background-color: #2563eb !important; /* blue */
+	border-color: #2563eb !important;
+	color: #fff !important;
+}
+
+/* launch: selling/open */
+.badge.sl-status-launch,
+.sl-status-badge.sl-status-launch {
+	background-color: #16a34a !important; /* green */
+	border-color: #16a34a !important;
+	color: #fff !important;
+}
+
+/* soldout: finished */
+.badge.sl-status-soldout,
+.sl-status-badge.sl-status-soldout {
+	background-color: #dc2626 !important; /* red */
+	border-color: #dc2626 !important;
+	color: #fff !important;
+}
+
 /* Make property media images render horizontally with horizontal scroll */
 .o_website_sale_image_list {
 	display: flex;

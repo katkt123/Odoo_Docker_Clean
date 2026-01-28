@@ -27,7 +27,7 @@
                 <form string="Dự án">
                     <sheet>
                         <header>
-                            <field name="status" widget="statusbar"/>
+                            <field name="status" widget="statusbar" options="{'clickable': true}" statusbar_visible="planning,building,launch,soldout"/>
                             <button name="%(action_smileliving_projects)d" string="Mở danh sách" type="action" class="oe_stat_button" icon="fa-list"/>
                             <button name="action_open_properties" string="Căn thuộc dự án" type="object" class="oe_stat_button" icon="fa-building">
                                 <field name="property_count" widget="statinfo"/>

@@ -32,7 +32,6 @@
     'data': [
         'security/ir.model.access.csv',
         'data/smileliving_seed_cron.xml',
-        'data/smileliving_demo_properties_projects.xml',
         'views/header_custom_button.xml',
         'views/property_submission_views.xml',
         'views/portal_listings_templates.xml',

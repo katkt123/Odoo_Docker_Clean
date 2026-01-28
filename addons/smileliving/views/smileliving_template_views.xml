@@ -39,7 +39,7 @@
                                                             <t t-set="status_label" t-value="dict(project._fields['status'].selection).get(project.status)"/>
                                                             <div class="d-flex justify-content-between align-items-start mb-3">
                                                             <h3 class="mb-0"><t t-esc="project.name"/></h3>
-                                                            <span class="badge bg-primary"><t t-esc="status_label"/></span>
+                                                            <span t-att-class="'badge sl-status-badge sl-status-%s' % (project.status or 'planning')"><t t-esc="status_label"/></span>
                                                         </div>
                                                         <p class="text-muted mb-3"><t t-esc="project.address"/></p>
                                                         <div class="row g-3 mb-4">
@@ -102,7 +102,7 @@
                             <div class="row align-items-end">
                                 <div class="col-lg-7 text-white">
                                     <t t-set="status_label" t-value="dict(project._fields['status'].selection).get(project.status)"/>
-                                    <span class="badge bg-primary mb-3"><t t-esc="status_label"/></span>
+                                    <span t-att-class="'badge sl-status-badge sl-status-%s mb-3' % (project.status or 'planning')"><t t-esc="status_label"/></span>
                                     <h1 class="display-5 fw-bold mb-3"><t t-esc="project.name"/></h1>
                                     <p class="lead mb-3"><t t-esc="project.description_short or ''"/></p>
                                     <p class="mb-1"><i class="fa fa-map-marker me-2"></i><t t-esc="project.address"/></p>

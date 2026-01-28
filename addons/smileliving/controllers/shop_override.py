@@ -16,9 +16,7 @@ class WebsiteSaleOverride(WebsiteSale):
         except Exception:
             ppg = 0
 
-        MAX_PPG = 3
-        # If client didn't set ppg, leave flow to base controller (it will use default),
-        # but ensure if provided it's capped.
+        MAX_PPG = 12
         if ppg > 0:
             capped = min(ppg, MAX_PPG)
             request.params['ppg'] = str(capped)
